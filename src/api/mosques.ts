@@ -5,6 +5,7 @@ type Json<P extends keyof paths, M extends keyof paths[P]> =
   paths[P][M] extends { responses: { 200: { content: { 'application/json': infer T } } } } ? T : never;
 
 export type MosqueResponse = Json<'/api/v1/mosques/{mosqueId}', 'get'>;
+export type MosqueListResponse = Json<'/api/v1/mosques', 'get'>;
 export type PrayerConfigResponse = Json<'/api/v1/mosques/{mosqueId}/prayer-config', 'get'>;
 export type UpdatePrayerConfigRequest =
   paths['/api/v1/mosques/{mosqueId}/prayer-config']['put'] extends
@@ -12,6 +13,10 @@ export type UpdatePrayerConfigRequest =
 
 export function fetchMosque(api: ApiClient, mosqueId: string): Promise<MosqueResponse> {
   return api.get<MosqueResponse>(`/mosques/${mosqueId}`, mosqueId);
+}
+
+export function listMyMosques(api: ApiClient): Promise<MosqueListResponse> {
+  return api.get<MosqueListResponse>('/mosques');
 }
 
 export function fetchPrayerConfig(api: ApiClient, mosqueId: string): Promise<PrayerConfigResponse> {

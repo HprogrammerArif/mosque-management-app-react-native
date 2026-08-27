@@ -66,6 +66,17 @@ export async function getCachedMosque(mosqueId: string) {
   return rows[0] ?? null;
 }
 
+/**
+ * Until Plan 3's sync makes multi-tenant local storage real, a device holds at most one
+ * mosque's data — so "is there a row at all" is a valid, fully offline way to resolve
+ * which mosque the home screen should show on every launch after the first.
+ */
+export async function getAnyCachedMosque() {
+  const db = await openDb();
+  const rows = await db.select().from(mosques).limit(1);
+  return rows[0] ?? null;
+}
+
 export async function getCachedPrayerConfig(mosqueId: string) {
   const db = await openDb();
   const rows = await db.select().from(prayerConfig).where(eq(prayerConfig.mosqueId, mosqueId)).limit(1);

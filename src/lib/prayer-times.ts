@@ -1,7 +1,28 @@
 import { CalculationMethod, Coordinates, PrayerTimes as AdhanPrayerTimes } from 'adhan';
-import type { PrayerConfigResponse } from '../api/mosques';
 
 export type PrayerName = 'fajr' | 'dhuhr' | 'asr' | 'maghrib' | 'isha';
+
+/**
+ * Deliberately its own type, not `PrayerConfigResponse` from the API layer — the ID
+ * field differs by source (the API calls it `tenantId`, the local cache row calls it
+ * `mosqueId` after Drizzle's column naming), and this function only ever touches the
+ * shared fields below. Structural typing means both the API response and a cached row
+ * satisfy this without a mapping step at every call site.
+ */
+export type PrayerConfigLike = {
+  calculationMethod: string;
+  fajrOffsetMin: number;
+  dhuhrOffsetMin: number;
+  asrOffsetMin: number;
+  maghribOffsetMin: number;
+  ishaOffsetMin: number;
+  fajrFixedTime: string | null;
+  dhuhrFixedTime: string | null;
+  asrFixedTime: string | null;
+  maghribFixedTime: string | null;
+  ishaFixedTime: string | null;
+  jumuahTime: string | null;
+};
 
 export type PrayerSlot = {
   prayer: PrayerName;
@@ -45,7 +66,7 @@ function addMinutes(date: Date, minutes: number): Date {
 }
 
 export function computePrayerTimes(
-  config: PrayerConfigResponse,
+  config: PrayerConfigLike,
   coords: { latitude: number; longitude: number },
   date: Date,
 ): DayPrayerTimes {

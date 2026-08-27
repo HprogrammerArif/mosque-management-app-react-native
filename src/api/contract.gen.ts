@@ -448,7 +448,17 @@ export interface paths {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": {
+                            id: string;
+                            name: string;
+                            timezone: string;
+                            latitude: number;
+                            longitude: number;
+                            /** @enum {string} */
+                            status: "PROVISIONING" | "ACTIVE" | "SUSPENDED" | "PENDING_DELETION" | "PURGED";
+                        }[];
+                    };
                 };
                 /** @description Error */
                 default: {
@@ -747,7 +757,17 @@ export interface paths {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": {
+                            id: string;
+                            mosqueId: string;
+                            userId: string;
+                            /** @enum {string} */
+                            role: "ADMIN" | "TREASURER" | "COMMITTEE" | "STAFF" | "MEMBER";
+                            /** @enum {string} */
+                            status: "ACTIVE" | "SUSPENDED" | "REMOVED";
+                        }[];
+                    };
                 };
                 /** @description Error */
                 default: {
@@ -816,7 +836,17 @@ export interface paths {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": {
+                            id: string;
+                            mosqueId: string;
+                            userId: string;
+                            /** @enum {string} */
+                            role: "ADMIN" | "TREASURER" | "COMMITTEE" | "STAFF" | "MEMBER";
+                            /** @enum {string} */
+                            status: "ACTIVE" | "SUSPENDED" | "REMOVED";
+                        };
+                    };
                 };
                 /** @description Error */
                 default: {

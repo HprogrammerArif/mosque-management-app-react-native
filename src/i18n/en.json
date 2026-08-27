@@ -25,5 +25,9 @@
     "now": "Now",
     "inTime": "{{prayer}} in {{time}}",
     "railSummary": "{{prayer}} in {{time}}, jamaat {{jamaatTime}}"
+  },
+  "home": {
+    "noMosque": "You're not part of a mosque yet.",
+    "createMosque": "Create a mosque"
   }
 }

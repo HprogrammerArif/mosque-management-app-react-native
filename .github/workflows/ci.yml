@@ -1,0 +1,24 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check out the backend for the contract
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/backend-mosque-management-app
+          path: ../backend
+      - uses: pnpm/action-setup@v4
+        with: { version: 10 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      # Drift guard — the only thing standing between this repo and hand-copied types.
+      - run: pnpm contract:sync
+      - run: git diff --exit-code src/api/contract.gen.ts openapi.json

@@ -9,7 +9,8 @@
     "ios": "expo run:ios",
     "typecheck": "tsc --noEmit",
     "test": "jest",
-    "lint": "eslint app src"
+    "lint": "eslint app src",
+    "contract:sync": "node scripts/sync-contract.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",

@@ -1,8 +1,10 @@
 import { openDatabaseSync } from 'expo-sqlite';
 import { drizzle } from 'drizzle-orm/expo-sqlite';
+import { migrate } from 'drizzle-orm/expo-sqlite/migrator';
 import * as SecureStore from 'expo-secure-store';
 import { getRandomBytes } from 'expo-crypto';
 import * as schema from './schema';
+import migrations from './migrations/migrations';
 
 const KEY_STORAGE_KEY = 'db_key';
 
@@ -37,7 +39,9 @@ async function open() {
   sqlite.execSync('PRAGMA foreign_keys = ON');
   sqlite.execSync('PRAGMA synchronous = NORMAL');
 
-  return drizzle(sqlite, { schema });
+  const db = drizzle(sqlite, { schema });
+  await migrate(db, migrations);
+  return db;
 }
 
 export type Db = Awaited<ReturnType<typeof open>>;

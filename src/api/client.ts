@@ -20,10 +20,16 @@ export class ApiClient {
     private readonly getToken: TokenProvider,
   ) {}
 
-  private async request<T>(method: 'GET' | 'POST', path: string, body?: unknown): Promise<T> {
+  private async request<T>(
+    method: 'GET' | 'POST' | 'PUT' | 'PATCH', path: string, body?: unknown, tenantId?: string,
+  ): Promise<T> {
     const token = await this.getToken();
     const headers: Record<string, string> = { 'Content-Type': 'application/json' };
     if (token !== null) headers['Authorization'] = `Bearer ${token}`;
+    // Belt-and-suspenders alongside :mosqueId in the path — TenantGuard (backend) prefers
+    // the path param, but a caller may not always have one to interpolate, so pass it
+    // here too when known (multi-tenancy doc: "header, or the path").
+    if (tenantId !== undefined) headers['X-Tenant-Id'] = tenantId;
 
     const init: RequestInit = { method, headers };
     if (body !== undefined) init.body = JSON.stringify(body);
@@ -48,6 +54,16 @@ export class ApiClient {
     return response.json() as Promise<T>;
   }
 
-  get<T>(path: string): Promise<T> { return this.request<T>('GET', path); }
-  post<T>(path: string, body: unknown): Promise<T> { return this.request<T>('POST', path, body); }
+  get<T>(path: string, tenantId?: string): Promise<T> {
+    return this.request<T>('GET', path, undefined, tenantId);
+  }
+  post<T>(path: string, body: unknown, tenantId?: string): Promise<T> {
+    return this.request<T>('POST', path, body, tenantId);
+  }
+  put<T>(path: string, body: unknown, tenantId?: string): Promise<T> {
+    return this.request<T>('PUT', path, body, tenantId);
+  }
+  patch<T>(path: string, body: unknown, tenantId?: string): Promise<T> {
+    return this.request<T>('PATCH', path, body, tenantId);
+  }
 }

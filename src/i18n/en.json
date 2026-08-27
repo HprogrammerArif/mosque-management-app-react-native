@@ -10,5 +10,20 @@
       "NETWORK_UNAVAILABLE": "Cannot reach the server. Check your connection and try again.",
       "INTERNAL_ERROR": "Something went wrong. Try again."
     }
+  },
+  "prayer": {
+    "names": {
+      "fajr": "Fajr",
+      "dhuhr": "Dhuhr",
+      "asr": "Asr",
+      "maghrib": "Maghrib",
+      "isha": "Isha",
+      "jumuah": "Jumu'ah"
+    },
+    "adhan": "Adhan",
+    "jamaat": "Jamaat",
+    "now": "Now",
+    "inTime": "{{prayer}} in {{time}}",
+    "railSummary": "{{prayer}} in {{time}}, jamaat {{jamaatTime}}"
   }
 }

@@ -9,7 +9,7 @@
     "ios": "expo run:ios",
     "typecheck": "tsc --noEmit",
     "test": "jest",
-    "lint": "eslint app src",
+    "lint": "eslint src",
     "contract:sync": "node scripts/sync-contract.mjs"
   },
   "dependencies": {

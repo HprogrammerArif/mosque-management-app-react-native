@@ -3,9 +3,9 @@
 Expo (React Native) app. Offline-first: the local SQLite database is the source of truth
 for every screen; the sync engine owns the network.
 
-Backend: [`mosque-backend`](../mosque-backend) — separate repository
-([ADR-0011](../mosque/docs/10-architecture/adr/0011-separate-repositories.md)).
-Design documentation: [`mosque/docs`](../mosque/docs).
+Backend: [`backend`](../backend) — separate repository
+([ADR-0011](../docs/10-architecture/adr/0011-separate-repositories.md)).
+Design documentation: [`docs`](../docs).
 
 ## Status
 
@@ -17,7 +17,7 @@ SDK peer versions come from Expo's own resolver rather than being hand-written.
 API types are **generated**, never hand-written:
 
 ```bash
-pnpm contract:sync    # copies mosque-backend/openapi.json, regenerates src/api/contract.gen.ts
+pnpm contract:sync    # copies ../backend/openapi.json, regenerates src/api/contract.gen.ts
 ```
 
 `src/api/contract.gen.ts` is committed and CI fails if regenerating it produces a diff.

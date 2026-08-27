@@ -1,0 +1,14 @@
+{
+  "auth": {
+    "signIn": "Sign in",
+    "identifier": "Phone number or email",
+    "identifierHint": "Use the number your mosque has on file",
+    "password": "Password",
+    "errors": {
+      "AUTH_INVALID_CREDENTIALS": "Phone, email or password is incorrect",
+      "AUTH_ACCOUNT_LOCKED": "Too many attempts. Try again shortly.",
+      "NETWORK_UNAVAILABLE": "Cannot reach the server. Check your connection and try again.",
+      "INTERNAL_ERROR": "Something went wrong. Try again."
+    }
+  }
+}

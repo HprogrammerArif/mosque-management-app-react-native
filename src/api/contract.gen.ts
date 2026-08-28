@@ -2206,6 +2206,222 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/sync/bootstrap": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** First sync for a tenant, or recovery after cursor loss */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        entities: ("donations" | "households")[];
+                    };
+                };
+            };
+            responses: {
+                /** @description Success */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Error */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error?: {
+                                /** @enum {string} */
+                                code: "AUTH_INVALID_CREDENTIALS" | "AUTH_TOKEN_EXPIRED" | "AUTH_TOKEN_INVALID" | "AUTH_TOKEN_REUSED" | "AUTH_ACCOUNT_LOCKED" | "AUTH_EMAIL_TAKEN" | "AUTH_PHONE_TAKEN" | "PERM_DENIED" | "PERM_ROLE_REQUIRED" | "FEATURE_NOT_IN_PLAN" | "FEATURE_LIMIT_REACHED" | "TENANT_ID_REQUIRED" | "TENANT_NOT_FOUND" | "TENANT_SUSPENDED" | "TENANT_READONLY" | "INVITATION_EXPIRED" | "INVITATION_ALREADY_ACCEPTED" | "VALIDATION_FAILED" | "RULE_FUND_RESTRICTION_VIOLATED" | "RULE_WAQF_CORPUS_PROTECTED" | "RULE_LEDGER_IMMUTABLE" | "RULE_LAST_ADMIN" | "SYNC_CURSOR_TOO_OLD" | "SYNC_DEPENDENCY_NOT_FOUND" | "SYNC_EPOCH_MISMATCH" | "CONFLICT_VERSION_MISMATCH" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_KEY_REQUIRED" | "NOT_FOUND" | "RATE_LIMIT_EXCEEDED" | "INTERNAL_ERROR";
+                                message: string;
+                                requestId: string;
+                                details?: unknown;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/sync/push": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Push a batch of offline mutations */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        deviceId: string;
+                        mutations: {
+                            mutationId: string;
+                            /** @enum {string} */
+                            entity: "donations" | "households";
+                            entityId: string;
+                            /** @enum {string} */
+                            op: "insert" | "update" | "delete";
+                            hlc: string;
+                            /** @default [] */
+                            dependsOn?: string[];
+                            payload: {
+                                fundId: string;
+                                amountMinor: number;
+                                /**
+                                 * @default BDT
+                                 * @enum {string}
+                                 */
+                                currency?: "BDT" | "USD" | "GBP" | "EUR";
+                                occurredOn: string;
+                                /** @enum {string} */
+                                method: "CASH" | "BANK" | "MOBILE_MONEY" | "CARD" | "CHEQUE" | "IN_KIND";
+                                /** @default null */
+                                donorHouseholdId?: string | null;
+                                /** @default null */
+                                donorName?: string | null;
+                                /** @default false */
+                                anonymous?: boolean;
+                                /** @default null */
+                                receiptNo?: string | null;
+                                /** @default null */
+                                note?: string | null;
+                                /** @default null */
+                                adjustsId?: string | null;
+                                /** @default null */
+                                adjustmentReason?: string | null;
+                            } | {
+                                name: string;
+                                /** @default null */
+                                addressLine1?: string | null;
+                                /** @default null */
+                                area?: string | null;
+                                /** @default null */
+                                phone?: string | null;
+                                /** @default 0 */
+                                monthlyDuesMinor?: number;
+                                /** @default false */
+                                exempt?: boolean;
+                                /** @default null */
+                                joinedOn?: string | null;
+                            };
+                        }[];
+                    };
+                };
+            };
+            responses: {
+                /** @description Success */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Error */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error?: {
+                                /** @enum {string} */
+                                code: "AUTH_INVALID_CREDENTIALS" | "AUTH_TOKEN_EXPIRED" | "AUTH_TOKEN_INVALID" | "AUTH_TOKEN_REUSED" | "AUTH_ACCOUNT_LOCKED" | "AUTH_EMAIL_TAKEN" | "AUTH_PHONE_TAKEN" | "PERM_DENIED" | "PERM_ROLE_REQUIRED" | "FEATURE_NOT_IN_PLAN" | "FEATURE_LIMIT_REACHED" | "TENANT_ID_REQUIRED" | "TENANT_NOT_FOUND" | "TENANT_SUSPENDED" | "TENANT_READONLY" | "INVITATION_EXPIRED" | "INVITATION_ALREADY_ACCEPTED" | "VALIDATION_FAILED" | "RULE_FUND_RESTRICTION_VIOLATED" | "RULE_WAQF_CORPUS_PROTECTED" | "RULE_LEDGER_IMMUTABLE" | "RULE_LAST_ADMIN" | "SYNC_CURSOR_TOO_OLD" | "SYNC_DEPENDENCY_NOT_FOUND" | "SYNC_EPOCH_MISMATCH" | "CONFLICT_VERSION_MISMATCH" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_KEY_REQUIRED" | "NOT_FOUND" | "RATE_LIMIT_EXCEEDED" | "INTERNAL_ERROR";
+                                message: string;
+                                requestId: string;
+                                details?: unknown;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/sync/pull": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Pull changes since a cursor */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Error */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error?: {
+                                /** @enum {string} */
+                                code: "AUTH_INVALID_CREDENTIALS" | "AUTH_TOKEN_EXPIRED" | "AUTH_TOKEN_INVALID" | "AUTH_TOKEN_REUSED" | "AUTH_ACCOUNT_LOCKED" | "AUTH_EMAIL_TAKEN" | "AUTH_PHONE_TAKEN" | "PERM_DENIED" | "PERM_ROLE_REQUIRED" | "FEATURE_NOT_IN_PLAN" | "FEATURE_LIMIT_REACHED" | "TENANT_ID_REQUIRED" | "TENANT_NOT_FOUND" | "TENANT_SUSPENDED" | "TENANT_READONLY" | "INVITATION_EXPIRED" | "INVITATION_ALREADY_ACCEPTED" | "VALIDATION_FAILED" | "RULE_FUND_RESTRICTION_VIOLATED" | "RULE_WAQF_CORPUS_PROTECTED" | "RULE_LEDGER_IMMUTABLE" | "RULE_LAST_ADMIN" | "SYNC_CURSOR_TOO_OLD" | "SYNC_DEPENDENCY_NOT_FOUND" | "SYNC_EPOCH_MISMATCH" | "CONFLICT_VERSION_MISMATCH" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_KEY_REQUIRED" | "NOT_FOUND" | "RATE_LIMIT_EXCEEDED" | "INTERNAL_ERROR";
+                                message: string;
+                                requestId: string;
+                                details?: unknown;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {

@@ -38,6 +38,7 @@
   },
   "common": {
     "save": "Save",
+    "pending": "Not yet synced",
     "amount": "Amount",
     "date": "Date",
     "method": "Payment method",

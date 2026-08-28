@@ -2,15 +2,14 @@ import { useState } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import * as Crypto from 'expo-crypto';
 import { useStyles } from '../../src/theme/use-styles';
 import type { Theme } from '../../src/theme/tokens';
 import { api } from '../../src/stores/session';
 import { useMosque } from '../../src/stores/mosque';
 import { Button } from '../../src/components/ui/Button';
 import { Input } from '../../src/components/ui/Input';
-import { createHousehold } from '../../src/api/money';
-import { ApiError } from '../../src/api/client';
+import { recordHouseholdOffline, runSync } from '../../src/data/sync-engine';
+import { newEntityId } from '../../src/lib/id';
 
 const formStyles = (t: Theme) => ({
   fill: { flex: 1, backgroundColor: t.color.paper },
@@ -41,19 +40,20 @@ export default function RegisterHousehold() {
     setSaving(true);
     setError(null);
     try {
-      await createHousehold(api, mosqueId, {
+      await recordHouseholdOffline({
+        id: newEntityId(),
         name,
         addressLine1: null,
         area: area === '' ? null : area,
         phone: phone === '' ? null : phone,
         monthlyDuesMinor,
-        collectorUserId: null,
         exempt: false,
         joinedOn: null,
-      }, Crypto.randomUUID());
+      });
       router.back();
-    } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Something went wrong');
+      void runSync(api, mosqueId);
+    } catch {
+      setError('Could not save. Try again.');
     } finally {
       setSaving(false);
     }

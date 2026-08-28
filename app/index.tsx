@@ -15,6 +15,7 @@ import { listMyMosques } from '../src/api/mosques';
 import {
   syncMosqueConfig, getAnyCachedMosque, getCachedMosque, getCachedPrayerConfig,
 } from '../src/data/sync-mosque';
+import { bootstrapIfNeeded } from '../src/data/sync-engine';
 
 const indexStyles = (t: Theme) => ({
   fill: { flex: 1, backgroundColor: t.color.paper },
@@ -76,6 +77,9 @@ export default function Index() {
 
       // Refresh in the background — the screen already has something to show.
       void syncMosqueConfig(api, resolved.id);
+      // One-time seed of the sync engine's local tables (households/donations) — a
+      // no-op after the first successful call (bootstrapIfNeeded checks sync_state).
+      void bootstrapIfNeeded(api, resolved.id);
     })();
 
     return () => { cancelled = true; };

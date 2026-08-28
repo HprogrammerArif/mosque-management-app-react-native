@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import * as Crypto from 'expo-crypto';
 import { useStyles } from '../../src/theme/use-styles';
 import type { Theme } from '../../src/theme/tokens';
 import { api } from '../../src/stores/session';
@@ -10,8 +9,9 @@ import { useMosque } from '../../src/stores/mosque';
 import { Button } from '../../src/components/ui/Button';
 import { Input } from '../../src/components/ui/Input';
 import { SelectField } from '../../src/components/ui/SelectField';
-import { listFunds, recordDonation, type FundResponse } from '../../src/api/money';
-import { ApiError } from '../../src/api/client';
+import { listFunds, type FundResponse } from '../../src/api/money';
+import { recordDonationOffline, runSync } from '../../src/data/sync-engine';
+import { newEntityId } from '../../src/lib/id';
 
 const DONATION_METHODS = ['CASH', 'BANK', 'MOBILE_MONEY', 'CARD', 'CHEQUE', 'IN_KIND'] as const;
 
@@ -60,21 +60,27 @@ export default function RecordDonation() {
     setSaving(true);
     setError(null);
     try {
-      await recordDonation(api, mosqueId, {
+      // Offline-first (offline-sync-protocol.md §5.4): writes the local row + outbox
+      // entry in one transaction and returns immediately — the screen never blocks on
+      // network. Sync happens after, invisibly; a failure here reaches the user, a
+      // failure to REACH the server afterward does not (it stays queued and retries).
+      await recordDonationOffline({
+        id: newEntityId(),
         fundId,
         amountMinor,
         currency: 'BDT',
         occurredOn,
-        method: method as typeof DONATION_METHODS[number],
+        method,
         donorHouseholdId: null,
         donorName: donorName === '' ? null : donorName,
         anonymous: false,
         receiptNo: null,
         note: note === '' ? null : note,
-      }, Crypto.randomUUID());
+      });
       router.back();
-    } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Something went wrong');
+      void runSync(api, mosqueId);
+    } catch {
+      setError('Could not save. Try again.');
     } finally {
       setSaving(false);
     }

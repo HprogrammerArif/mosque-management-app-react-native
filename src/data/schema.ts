@@ -26,3 +26,73 @@ export const prayerConfig = sqliteTable('prayer_config', {
   ishaFixedTime: text('isha_fixed_time'),
   jumuahTime: text('jumuah_time'),
 });
+
+// Households and donations carry sync metadata (offline-sync-protocol.md §4.1):
+// serverVersion/changeSeq/hlc are null until the first successful sync ("never
+// synced"); dirty/pendingOp track an in-flight local write awaiting acknowledgement.
+// No tenantId column yet — see mosques' own note; this device holds one mosque's data
+// until Plan 3's multi-tenant sync work is further along than "insert-only, two
+// entities" (matches the backend's own current scope, Phase 3A).
+export const households = sqliteTable('households', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  addressLine1: text('address_line1'),
+  area: text('area'),
+  phone: text('phone'),
+  monthlyDuesMinor: integer('monthly_dues_minor').notNull().default(0),
+  exempt: integer('exempt', { mode: 'boolean' }).notNull().default(false),
+  joinedOn: text('joined_on'),
+  status: text('status').notNull().default('ACTIVE'),
+  serverVersion: integer('server_version'),
+  changeSeq: integer('change_seq'),
+  hlc: text('hlc'),
+  dirty: integer('dirty', { mode: 'boolean' }).notNull().default(false),
+  pendingOp: text('pending_op'),
+});
+
+export const donations = sqliteTable('donations', {
+  id: text('id').primaryKey(),
+  fundId: text('fund_id').notNull(),
+  amountMinor: integer('amount_minor').notNull(),
+  currency: text('currency').notNull().default('BDT'),
+  occurredOn: text('occurred_on').notNull(),
+  method: text('method').notNull(),
+  donorHouseholdId: text('donor_household_id'),
+  donorName: text('donor_name'),
+  anonymous: integer('anonymous', { mode: 'boolean' }).notNull().default(false),
+  receiptNo: text('receipt_no'),
+  note: text('note'),
+  adjustsId: text('adjusts_id'),
+  adjustmentReason: text('adjustment_reason'),
+  serverVersion: integer('server_version'),
+  changeSeq: integer('change_seq'),
+  hlc: text('hlc'),
+  dirty: integer('dirty', { mode: 'boolean' }).notNull().default(false),
+  pendingOp: text('pending_op'),
+});
+
+// Written in the SAME SQLite transaction as the entity row it queues — durability
+// (I1) rests entirely on that, per §4.2. FIFO by `seq` (autoincrement).
+export const outbox = sqliteTable('outbox', {
+  seq: integer('seq').primaryKey({ autoIncrement: true }),
+  mutationId: text('mutation_id').notNull().unique(),
+  entity: text('entity').notNull(),
+  entityId: text('entity_id').notNull(),
+  op: text('op').notNull(),
+  payload: text('payload').notNull(),
+  hlc: text('hlc').notNull(),
+  dependsOn: text('depends_on'),
+  attempts: integer('attempts').notNull().default(0),
+  lastError: text('last_error'),
+  status: text('status').notNull().default('pending'),
+  createdAt: integer('created_at').notNull(),
+});
+
+// Per-entity cursor (§4.3) — a schema change to one entity doesn't force a resync of
+// the others, and a failure in one doesn't block the rest.
+export const syncState = sqliteTable('sync_state', {
+  entity: text('entity').primaryKey(),
+  cursor: integer('cursor').notNull().default(0),
+  bootstrapped: integer('bootstrapped', { mode: 'boolean' }).notNull().default(false),
+  lastSyncAt: integer('last_sync_at'),
+});

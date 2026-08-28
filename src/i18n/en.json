@@ -40,6 +40,7 @@
     "events": "Events",
     "announcements": "Announcements",
     "statistics": "Statistics",
+    "plan": "Plan",
     "back": "Back"
   },
   "common": {
@@ -122,7 +123,9 @@
     "statuses": {
       "DRAFT": "Draft — not yet posted",
       "POSTED": "Posted to ledger"
-    }
+    },
+    "lockedTitle": "Running payroll needs the Pro plan",
+    "lockedBody": "An administrator can enable this from Settings › Plan. Staff records stay available on every plan."
   },
   "committee": {
     "add": "Add committee member",
@@ -151,5 +154,23 @@
     "net": "Net",
     "fundBalances": "Fund balances",
     "donationTrends": "Donation trends (6 months)"
+  },
+  "settings": {
+    "plans": "Available plans",
+    "noExtraFeatures": "No extra features",
+    "switchTo": "Switch to {{plan}}",
+    "mockBillingNote": "Plan switching here is a demo control, not real billing — no payment is taken.",
+    "subscriptionStatus": {
+      "TRIALING": "Trial",
+      "ACTIVE": "Active",
+      "PAST_DUE": "Payment past due",
+      "CANCELED": "Canceled",
+      "EXPIRED": "Expired"
+    },
+    "features": {
+      "ONLINE_DONATIONS": "Online donations",
+      "PAYROLL": "Payroll",
+      "EXPORT": "Data export"
+    }
   }
 }

@@ -42,6 +42,9 @@ export type FundBalanceStatResponse =
   Json<'/api/v1/mosques/{mosqueId}/statistics/fund-balances', 'get'> extends (infer T)[] ? T : never;
 export type DonationTrendResponse =
   Json<'/api/v1/mosques/{mosqueId}/statistics/donation-trends', 'get'> extends (infer T)[] ? T : never;
+export type BillingSummaryResponse = Json<'/api/v1/mosques/{mosqueId}/billing/subscription', 'get'>;
+export type PlanResponse = Json<'/api/v1/billing/plans', 'get'> extends (infer T)[] ? T : never;
+export type MockSetPlanRequest = Body<'/api/v1/mosques/{mosqueId}/billing/mock-set-plan', 'post'>;
 
 export function listFunds(api: ApiClient, mosqueId: string): Promise<FundResponse[]> {
   return api.get<FundResponse[]>(`/mosques/${mosqueId}/funds`, mosqueId);
@@ -203,4 +206,18 @@ export function listFundBalanceStats(api: ApiClient, mosqueId: string): Promise<
 
 export function listDonationTrends(api: ApiClient, mosqueId: string, months = 6): Promise<DonationTrendResponse[]> {
   return api.get<DonationTrendResponse[]>(`/mosques/${mosqueId}/statistics/donation-trends?months=${months}`, mosqueId);
+}
+
+export function getBillingSummary(api: ApiClient, mosqueId: string): Promise<BillingSummaryResponse> {
+  return api.get<BillingSummaryResponse>(`/mosques/${mosqueId}/billing/subscription`, mosqueId);
+}
+
+export function listPlans(api: ApiClient): Promise<PlanResponse[]> {
+  return api.get<PlanResponse[]>('/billing/plans');
+}
+
+export function mockSetPlan(
+  api: ApiClient, mosqueId: string, input: MockSetPlanRequest, idempotencyKey: string,
+): Promise<BillingSummaryResponse> {
+  return api.post<BillingSummaryResponse>(`/mosques/${mosqueId}/billing/mock-set-plan`, input, { tenantId: mosqueId, idempotencyKey });
 }

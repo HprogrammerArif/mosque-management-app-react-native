@@ -159,6 +159,20 @@ export interface paths {
                                 phone: string | null;
                                 email: string | null;
                             };
+                            memberships: {
+                                mosqueId: string;
+                                mosqueName: string;
+                                role: string;
+                                plan: string | null;
+                                entitlements: {
+                                    features: string[];
+                                    limits: {
+                                        adminUsers: number | null;
+                                        members: number | null;
+                                        historyMonths: number | null;
+                                    };
+                                };
+                            }[];
                         };
                     };
                 };
@@ -238,6 +252,20 @@ export interface paths {
                                 phone: string | null;
                                 email: string | null;
                             };
+                            memberships: {
+                                mosqueId: string;
+                                mosqueName: string;
+                                role: string;
+                                plan: string | null;
+                                entitlements: {
+                                    features: string[];
+                                    limits: {
+                                        adminUsers: number | null;
+                                        members: number | null;
+                                        historyMonths: number | null;
+                                    };
+                                };
+                            }[];
                         };
                     };
                 };
@@ -2901,7 +2929,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Generate a payroll run for a period */
+        /** Generate a payroll run for a period (PRO plan) */
         post: {
             parameters: {
                 query?: never;
@@ -3100,7 +3128,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Post a payroll run to the expense ledger */
+        /** Post a payroll run to the expense ledger (PRO plan) */
         post: {
             parameters: {
                 query?: never;
@@ -3893,6 +3921,247 @@ export interface paths {
         };
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/mosques/{mosqueId}/billing/subscription": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Current subscription and entitlements */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    mosqueId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            subscription: {
+                                id: string;
+                                mosqueId: string;
+                                planCode: string;
+                                /** @enum {string} */
+                                status: "TRIALING" | "ACTIVE" | "PAST_DUE" | "CANCELED" | "EXPIRED";
+                                billingPeriod: string;
+                                priceMinor: number;
+                                currency: string;
+                                currentPeriodStart: string | null;
+                                currentPeriodEnd: string | null;
+                                trialEndsAt: string | null;
+                                cancelAtPeriodEnd: boolean;
+                                provider: string | null;
+                                providerRef: string | null;
+                            };
+                            plan: {
+                                code: string;
+                                name: string;
+                                entitlements: {
+                                    features: string[];
+                                    limits: {
+                                        adminUsers: number | null;
+                                        members: number | null;
+                                        historyMonths: number | null;
+                                    };
+                                };
+                                active: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description Error */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error?: {
+                                /** @enum {string} */
+                                code: "AUTH_INVALID_CREDENTIALS" | "AUTH_TOKEN_EXPIRED" | "AUTH_TOKEN_INVALID" | "AUTH_TOKEN_REUSED" | "AUTH_ACCOUNT_LOCKED" | "AUTH_EMAIL_TAKEN" | "AUTH_PHONE_TAKEN" | "PERM_DENIED" | "PERM_ROLE_REQUIRED" | "FEATURE_NOT_IN_PLAN" | "FEATURE_LIMIT_REACHED" | "TENANT_ID_REQUIRED" | "TENANT_NOT_FOUND" | "TENANT_SUSPENDED" | "TENANT_READONLY" | "INVITATION_EXPIRED" | "INVITATION_ALREADY_ACCEPTED" | "VALIDATION_FAILED" | "RULE_FUND_RESTRICTION_VIOLATED" | "RULE_WAQF_CORPUS_PROTECTED" | "RULE_LEDGER_IMMUTABLE" | "RULE_LAST_ADMIN" | "RULE_DUES_ALREADY_SETTLED" | "RULE_DUES_OVERPAYMENT" | "RULE_PAYROLL_ALREADY_POSTED" | "SYNC_CURSOR_TOO_OLD" | "SYNC_DEPENDENCY_NOT_FOUND" | "SYNC_EPOCH_MISMATCH" | "CONFLICT_VERSION_MISMATCH" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_KEY_REQUIRED" | "NOT_FOUND" | "RATE_LIMIT_EXCEEDED" | "INTERNAL_ERROR";
+                                message: string;
+                                requestId: string;
+                                details?: unknown;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/billing/plans": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List available plans */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            name: string;
+                            entitlements: {
+                                features: string[];
+                                limits: {
+                                    adminUsers: number | null;
+                                    members: number | null;
+                                    historyMonths: number | null;
+                                };
+                            };
+                            active: boolean;
+                        }[];
+                    };
+                };
+                /** @description Error */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error?: {
+                                /** @enum {string} */
+                                code: "AUTH_INVALID_CREDENTIALS" | "AUTH_TOKEN_EXPIRED" | "AUTH_TOKEN_INVALID" | "AUTH_TOKEN_REUSED" | "AUTH_ACCOUNT_LOCKED" | "AUTH_EMAIL_TAKEN" | "AUTH_PHONE_TAKEN" | "PERM_DENIED" | "PERM_ROLE_REQUIRED" | "FEATURE_NOT_IN_PLAN" | "FEATURE_LIMIT_REACHED" | "TENANT_ID_REQUIRED" | "TENANT_NOT_FOUND" | "TENANT_SUSPENDED" | "TENANT_READONLY" | "INVITATION_EXPIRED" | "INVITATION_ALREADY_ACCEPTED" | "VALIDATION_FAILED" | "RULE_FUND_RESTRICTION_VIOLATED" | "RULE_WAQF_CORPUS_PROTECTED" | "RULE_LEDGER_IMMUTABLE" | "RULE_LAST_ADMIN" | "RULE_DUES_ALREADY_SETTLED" | "RULE_DUES_OVERPAYMENT" | "RULE_PAYROLL_ALREADY_POSTED" | "SYNC_CURSOR_TOO_OLD" | "SYNC_DEPENDENCY_NOT_FOUND" | "SYNC_EPOCH_MISMATCH" | "CONFLICT_VERSION_MISMATCH" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_KEY_REQUIRED" | "NOT_FOUND" | "RATE_LIMIT_EXCEEDED" | "INTERNAL_ERROR";
+                                message: string;
+                                requestId: string;
+                                details?: unknown;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/mosques/{mosqueId}/billing/mock-set-plan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Mock billing: set the mosque's plan directly (no real payment — ADR-0007) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    mosqueId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        planCode: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Success */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            subscription: {
+                                id: string;
+                                mosqueId: string;
+                                planCode: string;
+                                /** @enum {string} */
+                                status: "TRIALING" | "ACTIVE" | "PAST_DUE" | "CANCELED" | "EXPIRED";
+                                billingPeriod: string;
+                                priceMinor: number;
+                                currency: string;
+                                currentPeriodStart: string | null;
+                                currentPeriodEnd: string | null;
+                                trialEndsAt: string | null;
+                                cancelAtPeriodEnd: boolean;
+                                provider: string | null;
+                                providerRef: string | null;
+                            };
+                            plan: {
+                                code: string;
+                                name: string;
+                                entitlements: {
+                                    features: string[];
+                                    limits: {
+                                        adminUsers: number | null;
+                                        members: number | null;
+                                        historyMonths: number | null;
+                                    };
+                                };
+                                active: boolean;
+                            };
+                        };
+                    };
+                };
+                /** @description Error */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error?: {
+                                /** @enum {string} */
+                                code: "AUTH_INVALID_CREDENTIALS" | "AUTH_TOKEN_EXPIRED" | "AUTH_TOKEN_INVALID" | "AUTH_TOKEN_REUSED" | "AUTH_ACCOUNT_LOCKED" | "AUTH_EMAIL_TAKEN" | "AUTH_PHONE_TAKEN" | "PERM_DENIED" | "PERM_ROLE_REQUIRED" | "FEATURE_NOT_IN_PLAN" | "FEATURE_LIMIT_REACHED" | "TENANT_ID_REQUIRED" | "TENANT_NOT_FOUND" | "TENANT_SUSPENDED" | "TENANT_READONLY" | "INVITATION_EXPIRED" | "INVITATION_ALREADY_ACCEPTED" | "VALIDATION_FAILED" | "RULE_FUND_RESTRICTION_VIOLATED" | "RULE_WAQF_CORPUS_PROTECTED" | "RULE_LEDGER_IMMUTABLE" | "RULE_LAST_ADMIN" | "RULE_DUES_ALREADY_SETTLED" | "RULE_DUES_OVERPAYMENT" | "RULE_PAYROLL_ALREADY_POSTED" | "SYNC_CURSOR_TOO_OLD" | "SYNC_DEPENDENCY_NOT_FOUND" | "SYNC_EPOCH_MISMATCH" | "CONFLICT_VERSION_MISMATCH" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_KEY_REQUIRED" | "NOT_FOUND" | "RATE_LIMIT_EXCEEDED" | "INTERNAL_ERROR";
+                                message: string;
+                                requestId: string;
+                                details?: unknown;
+                            };
+                        };
+                    };
+                };
+            };
+        };
         delete?: never;
         options?: never;
         head?: never;

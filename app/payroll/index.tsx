@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import * as Crypto from 'expo-crypto';
 import { useStyles } from '../../src/theme/use-styles';
 import type { Theme } from '../../src/theme/tokens';
-import { api } from '../../src/stores/session';
+import { api, useSession, hasFeature } from '../../src/stores/session';
 import { useMosque } from '../../src/stores/mosque';
 import { Button } from '../../src/components/ui/Button';
 import { SelectField } from '../../src/components/ui/SelectField';
@@ -29,6 +29,12 @@ const runStyles = (t: Theme) => ({
   name: { ...t.type.body, fontFamily: t.font.text, color: t.color.ink },
   amount: { ...t.type.ledger, fontFamily: t.font.ledger, color: t.color.brick },
   staffLink: { marginTop: t.space[2] },
+  lockedCard: {
+    borderRadius: t.radius.base, borderWidth: 1, borderColor: t.color.surface,
+    backgroundColor: t.color.surface, padding: t.space[4], gap: t.space[1],
+  },
+  lockedTitle: { ...t.type.body, fontFamily: t.font.textSemi, color: t.color.ink },
+  lockedBody: { ...t.type.body, fontFamily: t.font.text, color: t.color.stone },
 });
 
 function currentPeriod(): string {
@@ -40,6 +46,8 @@ export default function PayrollRunScreen() {
   const { t } = useTranslation();
   const s = useStyles(runStyles);
   const mosqueId = useMosque((state) => state.currentMosqueId);
+  const memberships = useSession((state) => state.memberships);
+  const payrollEnabled = mosqueId !== null && hasFeature(memberships, mosqueId, 'PAYROLL');
   const [period] = useState(currentPeriod());
   const [run, setRun] = useState<PayrollRunResponse | null>(null);
   const [lines, setLines] = useState<PayrollLineResponse[]>([]);
@@ -89,7 +97,12 @@ export default function PayrollRunScreen() {
       <View style={s.content}>
         <Text style={s.header}>{period}</Text>
 
-        {run === null ? (
+        {!payrollEnabled ? (
+          <View style={s.lockedCard}>
+            <Text style={s.lockedTitle}>{t('payroll.lockedTitle')}</Text>
+            <Text style={s.lockedBody}>{t('payroll.lockedBody')}</Text>
+          </View>
+        ) : run === null ? (
           <>
             <SelectField
               label={t('payroll.fund')}

@@ -126,6 +126,9 @@ export default function Index() {
         <View style={s.navButton}>
           <Button label={t('nav.statistics')} variant="secondary" onPress={() => router.push('/statistics')} />
         </View>
+        <View style={s.navButton}>
+          <Button label={t('nav.plan')} variant="secondary" onPress={() => router.push('/settings/plan')} />
+        </View>
       </View>
     </ScrollView>
   );

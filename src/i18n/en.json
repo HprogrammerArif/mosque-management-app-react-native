@@ -38,6 +38,7 @@
     "payroll": "Payroll",
     "committee": "Committee",
     "events": "Events",
+    "announcements": "Announcements",
     "back": "Back"
   },
   "common": {
@@ -134,5 +135,12 @@
     "eventTitle": "Event title",
     "time": "Time (24h, HH:MM)",
     "location": "Location (optional)"
+  },
+  "announcements": {
+    "add": "Post announcement",
+    "empty": "No announcements yet.",
+    "announcementTitle": "Title",
+    "body": "Message",
+    "urgent": "Urgent (janazah)"
   }
 }

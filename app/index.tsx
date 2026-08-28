@@ -96,6 +96,9 @@ export default function Index() {
       <PrayerTable times={times} />
       <View style={s.nav}>
         <View style={s.navButton}>
+          <Button label={t('nav.households')} variant="secondary" onPress={() => router.push('/households')} />
+        </View>
+        <View style={s.navButton}>
           <Button label={t('nav.donations')} variant="secondary" onPress={() => router.push('/donations')} />
         </View>
         <View style={s.navButton}>

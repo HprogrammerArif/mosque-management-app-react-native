@@ -33,6 +33,7 @@
   "nav": {
     "donations": "Donations",
     "expenses": "Expenses",
+    "households": "Households",
     "back": "Back"
   },
   "common": {
@@ -49,6 +50,15 @@
       "CHEQUE": "Cheque",
       "IN_KIND": "In kind"
     }
+  },
+  "households": {
+    "title": "Households",
+    "register": "Register household",
+    "name": "Household name",
+    "area": "Area / zone (optional)",
+    "phone": "Phone (optional)",
+    "monthlyDues": "Monthly dues (optional)",
+    "empty": "No households registered yet."
   },
   "donations": {
     "title": "Donations",

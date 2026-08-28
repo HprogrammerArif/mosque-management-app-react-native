@@ -136,6 +136,9 @@ export default function Index() {
         <View style={s.navButton}>
           <Button label={t('nav.syncIssues')} variant="secondary" onPress={() => router.push('/sync-issues')} />
         </View>
+        <View style={s.navButton}>
+          <Button label={t('nav.language')} variant="secondary" onPress={() => router.push('/settings/language')} />
+        </View>
       </View>
     </ScrollView>
   );

@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemeProvider } from '../src/theme/ThemeProvider';
 import { useSyncTriggers } from '../src/data/sync-triggers';
-import '../src/i18n';
+import { restoreStoredLanguage } from '../src/i18n';
 
 void SplashScreen.preventAutoHideAsync();
 
@@ -17,12 +17,15 @@ export default function RootLayout() {
     IBMPlexSansCondensed_600SemiBold: require('../assets/fonts/IBMPlexSansCondensed-SemiBold.ttf'),
     IBMPlexMono_400Regular: require('../assets/fonts/IBMPlexMono-Regular.ttf'),
   });
+  const [languageReady, setLanguageReady] = useState(false);
+
+  useEffect(() => { void restoreStoredLanguage().then(() => setLanguageReady(true)); }, []);
 
   useEffect(() => {
-    if (fontsLoaded) void SplashScreen.hideAsync();
-  }, [fontsLoaded]);
+    if (fontsLoaded && languageReady) void SplashScreen.hideAsync();
+  }, [fontsLoaded, languageReady]);
 
-  if (!fontsLoaded) return null;
+  if (!fontsLoaded || !languageReady) return null;
 
   return (
     <SafeAreaProvider>

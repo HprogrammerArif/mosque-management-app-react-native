@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import * as SecureStore from 'expo-secure-store';
 import { ApiClient } from '../api/client';
+import { applyAccountLocaleIfUnset } from '../i18n';
 
 const TOKENS_KEY = 'tokens';
 const USER_KEY = 'user';
@@ -51,13 +52,17 @@ export const useSession = create<SessionState>((set) => ({
       SecureStore.getItemAsync(USER_KEY),
       SecureStore.getItemAsync(MEMBERSHIPS_KEY),
     ]);
-    set(tokens !== null && user !== null
-      ? {
-        user: JSON.parse(user) as User,
+    if (tokens !== null && user !== null) {
+      const parsedUser = JSON.parse(user) as User;
+      set({
+        user: parsedUser,
         memberships: memberships === null ? [] : JSON.parse(memberships) as Membership[],
         status: 'authenticated',
-      }
-      : { user: null, memberships: [], status: 'unauthenticated' });
+      });
+      await applyAccountLocaleIfUnset(parsedUser.locale);
+    } else {
+      set({ user: null, memberships: [], status: 'unauthenticated' });
+    }
   },
 
   signIn: async (response) => {
@@ -69,6 +74,7 @@ export const useSession = create<SessionState>((set) => ({
     await SecureStore.setItemAsync(USER_KEY, JSON.stringify(response.user));
     await SecureStore.setItemAsync(MEMBERSHIPS_KEY, JSON.stringify(response.memberships));
     set({ user: response.user, memberships: response.memberships, status: 'authenticated' });
+    await applyAccountLocaleIfUnset(response.user.locale);
   },
 
   signOut: async () => {

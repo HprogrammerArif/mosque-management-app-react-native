@@ -43,6 +43,7 @@
     "plan": "Plan",
     "notifications": "Notifications",
     "syncIssues": "Sync issues",
+    "language": "Language",
     "back": "Back"
   },
   "common": {
@@ -184,6 +185,11 @@
       "quietHoursNote": "Urgent janazah announcements are never silenced, even during quiet hours.",
       "quietHoursStart": "Starts (HH:MM)",
       "quietHoursEnd": "Ends (HH:MM)"
+    },
+    "language": {
+      "title": "Language",
+      "en": "English",
+      "bn": "Bangla"
     }
   },
   "syncIssues": {

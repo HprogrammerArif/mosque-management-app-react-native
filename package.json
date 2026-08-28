@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test": "jest",
     "lint": "eslint app src",
-    "contract:sync": "node scripts/sync-contract.mjs"
+    "contract:sync": "node scripts/sync-contract.mjs",
+    "i18n:check": "node scripts/i18n-check.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
@@ -23,6 +24,7 @@
     "expo-crypto": "~57.0.2",
     "expo-font": "~57.0.2",
     "expo-linking": "~57.0.8",
+    "expo-localization": "~57.0.1",
     "expo-router": "~57.0.17",
     "expo-secure-store": "~57.0.2",
     "expo-splash-screen": "~57.0.8",

@@ -42,6 +42,7 @@
     "statistics": "Statistics",
     "plan": "Plan",
     "notifications": "Notifications",
+    "syncIssues": "Sync issues",
     "back": "Back"
   },
   "common": {
@@ -183,6 +184,15 @@
       "quietHoursNote": "Urgent janazah announcements are never silenced, even during quiet hours.",
       "quietHoursStart": "Starts (HH:MM)",
       "quietHoursEnd": "Ends (HH:MM)"
+    }
+  },
+  "syncIssues": {
+    "empty": "No sync issues — everything's up to date.",
+    "unknownError": "This didn't sync, and no reason was recorded.",
+    "retry": "Retry",
+    "entities": {
+      "donations": "Donation",
+      "households": "Household"
     }
   }
 }

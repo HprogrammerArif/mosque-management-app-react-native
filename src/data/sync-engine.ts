@@ -229,3 +229,26 @@ async function pullChanges(api: ApiClient, mosqueId: string): Promise<void> {
     });
   }
 }
+
+export type FailedMutation = typeof outbox.$inferSelect;
+
+/**
+ * The conflict-inbox equivalent named as a gap earlier in the build — narrower than the
+ * protocol doc's full §6.3 design (side-by-side versions, keep-mine/keep-theirs/merge-
+ * manually), since a `rejected` mutation isn't a genuine conflict with a resolvable
+ * "theirs" to compare against — it's the server refusing the write outright (a business
+ * rule, a missing dependency, a malformed payload). Retry is the one action that's
+ * always safe to offer here: it doesn't touch or discard anything, it just re-attempts
+ * the exact same mutation next sync. A "discard" action is deliberately not built —
+ * these rows are financial and household records, and silently offering to abandon one
+ * is a bigger decision than this pass should make unasked.
+ */
+export async function listFailedMutations(): Promise<FailedMutation[]> {
+  const db = await openDb();
+  return db.select().from(outbox).where(eq(outbox.status, 'failed')).orderBy(outbox.seq);
+}
+
+export async function retryFailedMutation(seq: number): Promise<void> {
+  const db = await openDb();
+  await db.update(outbox).set({ status: 'pending' }).where(eq(outbox.seq, seq));
+}

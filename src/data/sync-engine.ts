@@ -157,6 +157,10 @@ async function pushOutbox(api: ApiClient, mosqueId: string): Promise<void> {
     hlc: row.hlc,
     dependsOn: row.dependsOn === null ? [] : (JSON.parse(row.dependsOn) as string[]),
     payload: JSON.parse(row.payload) as Record<string, unknown>,
+    // Always [] — every mutation this engine currently produces is an insert, which
+    // ignores changedFields server-side. A future household-edit action must populate
+    // it with exactly the fields the user changed (see SyncMutation's own doc comment).
+    changedFields: [],
   }));
 
   const deviceId = await getNodeId();
@@ -166,11 +170,13 @@ async function pushOutbox(api: ApiClient, mosqueId: string): Promise<void> {
     const source = pending.find((p) => p.mutationId === result.mutationId);
     if (!source) continue;
 
-    if (result.status === 'accepted' || result.status === 'duplicate') {
+    if (result.status === 'accepted' || result.status === 'duplicate' || result.status === 'conflict') {
       // Clear _dirty and stamp the canonical sync metadata, then drop the outbox row —
-      // exactly the client action the wire protocol specifies for both statuses (they
-      // are identical from the client's point of view; 'duplicate' is the retry path
-      // that delivers I2).
+      // exactly the client action the wire protocol specifies for all three statuses:
+      // 'duplicate' is the retry path that delivers I2, and 'conflict' with
+      // resolution 'field_merge' is automatic (offline-sync-protocol.md §5.2: "apply
+      // the resolution") — there is no manual-resolution case for the two entities this
+      // engine handles today, so it's applied the same as an outright accept.
       const table = source.entity === 'donations' ? donations : households;
       await db.update(table).set({
         serverVersion: result.serverVersion, changeSeq: result.changeSeq,

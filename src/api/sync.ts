@@ -12,6 +12,7 @@ import type { ApiClient } from './client';
 export type SyncMutationResult =
   | { mutationId: string; status: 'accepted'; serverVersion: number; changeSeq: number; canonical: Record<string, unknown> }
   | { mutationId: string; status: 'duplicate'; serverVersion: number; changeSeq: number; canonical: Record<string, unknown> }
+  | { mutationId: string; status: 'conflict'; resolution: 'field_merge'; serverVersion: number; changeSeq: number; canonical: Record<string, unknown> }
   | { mutationId: string; status: 'rejected'; code: string; message: string };
 
 export type SyncPushResponse = { results: SyncMutationResult[]; cursor: number };
@@ -34,6 +35,15 @@ export type SyncMutation = {
   hlc: string;
   dependsOn: string[];
   payload: Record<string, unknown>;
+  /**
+   * Field-merge entities only (offline-sync-protocol.md §6.2) — which payload keys this
+   * write intends to change. Always [] today: nothing in this app produces a household
+   * `update` mutation yet (no edit screen exists), only `insert`, which ignores this
+   * field server-side. A future edit action must populate it with exactly the fields the
+   * user actually changed — see sync.service.ts's note on why a blanket mutation clock
+   * against every field would collapse field-level merge into row-level LWW.
+   */
+  changedFields: string[];
 };
 
 export function syncBootstrap(

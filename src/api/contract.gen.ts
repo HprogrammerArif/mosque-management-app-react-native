@@ -4489,6 +4489,8 @@ export interface paths {
                                 /** @default null */
                                 joinedOn?: string | null;
                             };
+                            /** @default [] */
+                            changedFields?: string[];
                         }[];
                     };
                 };

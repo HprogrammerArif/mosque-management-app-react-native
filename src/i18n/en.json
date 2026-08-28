@@ -41,6 +41,7 @@
     "announcements": "Announcements",
     "statistics": "Statistics",
     "plan": "Plan",
+    "notifications": "Notifications",
     "back": "Back"
   },
   "common": {
@@ -171,6 +172,16 @@
       "ONLINE_DONATIONS": "Online donations",
       "PAYROLL": "Payroll",
       "EXPORT": "Data export"
+    },
+    "notifications": {
+      "announcements": "Announcements",
+      "duesReminders": "Dues reminders",
+      "prayerReminders": "Prayer reminders",
+      "events": "Events",
+      "quietHours": "Quiet hours",
+      "quietHoursNote": "Urgent janazah announcements are never silenced, even during quiet hours.",
+      "quietHoursStart": "Starts (HH:MM)",
+      "quietHoursEnd": "Ends (HH:MM)"
     }
   }
 }

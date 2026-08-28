@@ -45,6 +45,8 @@ export type DonationTrendResponse =
 export type BillingSummaryResponse = Json<'/api/v1/mosques/{mosqueId}/billing/subscription', 'get'>;
 export type PlanResponse = Json<'/api/v1/billing/plans', 'get'> extends (infer T)[] ? T : never;
 export type MockSetPlanRequest = Body<'/api/v1/mosques/{mosqueId}/billing/mock-set-plan', 'post'>;
+export type NotificationPreferencesResponse = Json<'/api/v1/me/notification-preferences', 'get'>;
+export type UpdateNotificationPreferencesRequest = Body<'/api/v1/me/notification-preferences', 'put'>;
 
 export function listFunds(api: ApiClient, mosqueId: string): Promise<FundResponse[]> {
   return api.get<FundResponse[]>(`/mosques/${mosqueId}/funds`, mosqueId);
@@ -220,4 +222,14 @@ export function mockSetPlan(
   api: ApiClient, mosqueId: string, input: MockSetPlanRequest, idempotencyKey: string,
 ): Promise<BillingSummaryResponse> {
   return api.post<BillingSummaryResponse>(`/mosques/${mosqueId}/billing/mock-set-plan`, input, { tenantId: mosqueId, idempotencyKey });
+}
+
+export function getNotificationPreferences(api: ApiClient): Promise<NotificationPreferencesResponse> {
+  return api.get<NotificationPreferencesResponse>('/me/notification-preferences');
+}
+
+export function updateNotificationPreferences(
+  api: ApiClient, input: UpdateNotificationPreferencesRequest, idempotencyKey: string,
+): Promise<NotificationPreferencesResponse> {
+  return api.put<NotificationPreferencesResponse>('/me/notification-preferences', input, { idempotencyKey });
 }

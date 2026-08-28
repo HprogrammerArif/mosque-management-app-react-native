@@ -78,10 +78,12 @@ export default function RecordExpense() {
       }, Crypto.randomUUID());
       router.back();
     } catch (err) {
-      // BR-1's rejection is exactly the message this screen exists to surface clearly —
-      // never the raw server text, same discipline as sign-in's error mapping.
+      // BR-1/BR-2's rejections are exactly the message this screen exists to surface
+      // clearly — never the raw server text, same discipline as sign-in's error mapping.
       if (err instanceof ApiError && err.code === 'RULE_FUND_RESTRICTION_VIOLATED') {
         setError(t('expenses.errors.RULE_FUND_RESTRICTION_VIOLATED'));
+      } else if (err instanceof ApiError && err.code === 'RULE_WAQF_CORPUS_PROTECTED') {
+        setError(t('expenses.errors.RULE_WAQF_CORPUS_PROTECTED'));
       } else {
         setError(err instanceof ApiError ? err.message : 'Something went wrong');
       }

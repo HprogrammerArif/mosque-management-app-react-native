@@ -87,7 +87,8 @@
     "empty": "No expenses recorded yet.",
     "success": "Expense recorded",
     "errors": {
-      "RULE_FUND_RESTRICTION_VIOLATED": "This fund can only pay for Zakat-eligible expense categories."
+      "RULE_FUND_RESTRICTION_VIOLATED": "This fund can only pay for Zakat-eligible expense categories.",
+      "RULE_WAQF_CORPUS_PROTECTED": "This would dip into the fund's protected endowment principal."
     }
   },
   "dues": {

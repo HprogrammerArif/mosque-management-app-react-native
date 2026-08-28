@@ -25,6 +25,12 @@ export type DuesPaymentResponse = Json<'/api/v1/mosques/{mosqueId}/dues/charges/
 export type GenerateDuesRequest = Body<'/api/v1/mosques/{mosqueId}/dues/generate', 'post'>;
 export type RecordDuesPaymentRequest = Body<'/api/v1/mosques/{mosqueId}/dues/charges/{chargeId}/payments', 'post'>;
 export type WaiveDuesChargeRequest = Body<'/api/v1/mosques/{mosqueId}/dues/charges/{chargeId}/waive', 'post'>;
+export type StaffResponse = Json<'/api/v1/mosques/{mosqueId}/staff', 'post'>;
+export type CreateStaffRequest = Body<'/api/v1/mosques/{mosqueId}/staff', 'post'>;
+export type PayrollRunResponse = Json<'/api/v1/mosques/{mosqueId}/payroll/runs', 'post'>;
+export type PayrollLineResponse =
+  Json<'/api/v1/mosques/{mosqueId}/payroll/runs/{runId}/lines', 'get'> extends (infer T)[] ? T : never;
+export type CreatePayrollRunRequest = Body<'/api/v1/mosques/{mosqueId}/payroll/runs', 'post'>;
 
 export function listFunds(api: ApiClient, mosqueId: string): Promise<FundResponse[]> {
   return api.get<FundResponse[]>(`/mosques/${mosqueId}/funds`, mosqueId);
@@ -107,5 +113,37 @@ export function waiveDuesCharge(
 ): Promise<DuesChargeResponse> {
   return api.post<DuesChargeResponse>(
     `/mosques/${mosqueId}/dues/charges/${chargeId}/waive`, input, { tenantId: mosqueId, idempotencyKey },
+  );
+}
+
+export function listStaff(api: ApiClient, mosqueId: string): Promise<StaffResponse[]> {
+  return api.get<StaffResponse[]>(`/mosques/${mosqueId}/staff`, mosqueId);
+}
+
+export function createStaff(
+  api: ApiClient, mosqueId: string, input: CreateStaffRequest, idempotencyKey: string,
+): Promise<StaffResponse> {
+  return api.post<StaffResponse>(`/mosques/${mosqueId}/staff`, input, { tenantId: mosqueId, idempotencyKey });
+}
+
+export function createPayrollRun(
+  api: ApiClient, mosqueId: string, input: CreatePayrollRunRequest, idempotencyKey: string,
+): Promise<PayrollRunResponse> {
+  return api.post<PayrollRunResponse>(`/mosques/${mosqueId}/payroll/runs`, input, { tenantId: mosqueId, idempotencyKey });
+}
+
+export function getPayrollRun(api: ApiClient, mosqueId: string, runId: string): Promise<PayrollRunResponse> {
+  return api.get<PayrollRunResponse>(`/mosques/${mosqueId}/payroll/runs/${runId}`, mosqueId);
+}
+
+export function listPayrollLines(api: ApiClient, mosqueId: string, runId: string): Promise<PayrollLineResponse[]> {
+  return api.get<PayrollLineResponse[]>(`/mosques/${mosqueId}/payroll/runs/${runId}/lines`, mosqueId);
+}
+
+export function postPayrollRun(
+  api: ApiClient, mosqueId: string, runId: string, idempotencyKey: string,
+): Promise<PayrollRunResponse> {
+  return api.post<PayrollRunResponse>(
+    `/mosques/${mosqueId}/payroll/runs/${runId}/post`, undefined, { tenantId: mosqueId, idempotencyKey },
   );
 }

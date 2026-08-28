@@ -35,6 +35,7 @@
     "expenses": "Expenses",
     "households": "Households",
     "dues": "Dues",
+    "payroll": "Payroll",
     "back": "Back"
   },
   "common": {
@@ -101,6 +102,22 @@
     "errors": {
       "RULE_DUES_OVERPAYMENT": "That payment is more than what's left on this charge.",
       "RULE_DUES_ALREADY_SETTLED": "This charge is already paid or waived."
+    }
+  },
+  "payroll": {
+    "fund": "Pay from fund",
+    "generate": "Generate this month's payroll",
+    "postToLedger": "Post to ledger",
+    "manageStaff": "Manage staff",
+    "noStaffOnRun": "No staff on this run.",
+    "addStaff": "Add staff",
+    "noStaff": "No staff records yet.",
+    "staffName": "Staff name",
+    "roleTitle": "Role (optional)",
+    "monthlySalary": "Monthly salary (optional)",
+    "statuses": {
+      "DRAFT": "Draft — not yet posted",
+      "POSTED": "Posted to ledger"
     }
   }
 }

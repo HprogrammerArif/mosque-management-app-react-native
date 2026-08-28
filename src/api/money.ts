@@ -37,6 +37,11 @@ export type EventResponse = Json<'/api/v1/mosques/{mosqueId}/events', 'post'>;
 export type CreateEventRequest = Body<'/api/v1/mosques/{mosqueId}/events', 'post'>;
 export type AnnouncementResponse = Json<'/api/v1/mosques/{mosqueId}/announcements', 'post'>;
 export type CreateAnnouncementRequest = Body<'/api/v1/mosques/{mosqueId}/announcements', 'post'>;
+export type IncomeExpenditureResponse = Json<'/api/v1/mosques/{mosqueId}/statistics/income-expenditure', 'get'>;
+export type FundBalanceStatResponse =
+  Json<'/api/v1/mosques/{mosqueId}/statistics/fund-balances', 'get'> extends (infer T)[] ? T : never;
+export type DonationTrendResponse =
+  Json<'/api/v1/mosques/{mosqueId}/statistics/donation-trends', 'get'> extends (infer T)[] ? T : never;
 
 export function listFunds(api: ApiClient, mosqueId: string): Promise<FundResponse[]> {
   return api.get<FundResponse[]>(`/mosques/${mosqueId}/funds`, mosqueId);
@@ -182,4 +187,20 @@ export function createAnnouncement(
   api: ApiClient, mosqueId: string, input: CreateAnnouncementRequest, idempotencyKey: string,
 ): Promise<AnnouncementResponse> {
   return api.post<AnnouncementResponse>(`/mosques/${mosqueId}/announcements`, input, { tenantId: mosqueId, idempotencyKey });
+}
+
+export function getIncomeExpenditure(
+  api: ApiClient, mosqueId: string, from: string, to: string,
+): Promise<IncomeExpenditureResponse> {
+  return api.get<IncomeExpenditureResponse>(
+    `/mosques/${mosqueId}/statistics/income-expenditure?from=${from}&to=${to}`, mosqueId,
+  );
+}
+
+export function listFundBalanceStats(api: ApiClient, mosqueId: string): Promise<FundBalanceStatResponse[]> {
+  return api.get<FundBalanceStatResponse[]>(`/mosques/${mosqueId}/statistics/fund-balances`, mosqueId);
+}
+
+export function listDonationTrends(api: ApiClient, mosqueId: string, months = 6): Promise<DonationTrendResponse[]> {
+  return api.get<DonationTrendResponse[]>(`/mosques/${mosqueId}/statistics/donation-trends?months=${months}`, mosqueId);
 }

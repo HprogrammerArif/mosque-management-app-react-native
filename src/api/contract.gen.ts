@@ -3721,6 +3721,184 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/mosques/{mosqueId}/statistics/income-expenditure": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Income vs expenditure for a date range */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    mosqueId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            fromDate: string;
+                            toDate: string;
+                            incomeMinor: number;
+                            expenditureMinor: number;
+                            netMinor: number;
+                        };
+                    };
+                };
+                /** @description Error */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error?: {
+                                /** @enum {string} */
+                                code: "AUTH_INVALID_CREDENTIALS" | "AUTH_TOKEN_EXPIRED" | "AUTH_TOKEN_INVALID" | "AUTH_TOKEN_REUSED" | "AUTH_ACCOUNT_LOCKED" | "AUTH_EMAIL_TAKEN" | "AUTH_PHONE_TAKEN" | "PERM_DENIED" | "PERM_ROLE_REQUIRED" | "FEATURE_NOT_IN_PLAN" | "FEATURE_LIMIT_REACHED" | "TENANT_ID_REQUIRED" | "TENANT_NOT_FOUND" | "TENANT_SUSPENDED" | "TENANT_READONLY" | "INVITATION_EXPIRED" | "INVITATION_ALREADY_ACCEPTED" | "VALIDATION_FAILED" | "RULE_FUND_RESTRICTION_VIOLATED" | "RULE_WAQF_CORPUS_PROTECTED" | "RULE_LEDGER_IMMUTABLE" | "RULE_LAST_ADMIN" | "RULE_DUES_ALREADY_SETTLED" | "RULE_DUES_OVERPAYMENT" | "RULE_PAYROLL_ALREADY_POSTED" | "SYNC_CURSOR_TOO_OLD" | "SYNC_DEPENDENCY_NOT_FOUND" | "SYNC_EPOCH_MISMATCH" | "CONFLICT_VERSION_MISMATCH" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_KEY_REQUIRED" | "NOT_FOUND" | "RATE_LIMIT_EXCEEDED" | "INTERNAL_ERROR";
+                                message: string;
+                                requestId: string;
+                                details?: unknown;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/mosques/{mosqueId}/statistics/fund-balances": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Fund balances (donations minus expenses per fund) */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    mosqueId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            fundId: string;
+                            fundName: string;
+                            balanceMinor: number;
+                        }[];
+                    };
+                };
+                /** @description Error */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error?: {
+                                /** @enum {string} */
+                                code: "AUTH_INVALID_CREDENTIALS" | "AUTH_TOKEN_EXPIRED" | "AUTH_TOKEN_INVALID" | "AUTH_TOKEN_REUSED" | "AUTH_ACCOUNT_LOCKED" | "AUTH_EMAIL_TAKEN" | "AUTH_PHONE_TAKEN" | "PERM_DENIED" | "PERM_ROLE_REQUIRED" | "FEATURE_NOT_IN_PLAN" | "FEATURE_LIMIT_REACHED" | "TENANT_ID_REQUIRED" | "TENANT_NOT_FOUND" | "TENANT_SUSPENDED" | "TENANT_READONLY" | "INVITATION_EXPIRED" | "INVITATION_ALREADY_ACCEPTED" | "VALIDATION_FAILED" | "RULE_FUND_RESTRICTION_VIOLATED" | "RULE_WAQF_CORPUS_PROTECTED" | "RULE_LEDGER_IMMUTABLE" | "RULE_LAST_ADMIN" | "RULE_DUES_ALREADY_SETTLED" | "RULE_DUES_OVERPAYMENT" | "RULE_PAYROLL_ALREADY_POSTED" | "SYNC_CURSOR_TOO_OLD" | "SYNC_DEPENDENCY_NOT_FOUND" | "SYNC_EPOCH_MISMATCH" | "CONFLICT_VERSION_MISMATCH" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_KEY_REQUIRED" | "NOT_FOUND" | "RATE_LIMIT_EXCEEDED" | "INTERNAL_ERROR";
+                                message: string;
+                                requestId: string;
+                                details?: unknown;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/mosques/{mosqueId}/statistics/donation-trends": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Monthly donation totals for the last N months */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    mosqueId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            period: string;
+                            totalMinor: number;
+                        }[];
+                    };
+                };
+                /** @description Error */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error?: {
+                                /** @enum {string} */
+                                code: "AUTH_INVALID_CREDENTIALS" | "AUTH_TOKEN_EXPIRED" | "AUTH_TOKEN_INVALID" | "AUTH_TOKEN_REUSED" | "AUTH_ACCOUNT_LOCKED" | "AUTH_EMAIL_TAKEN" | "AUTH_PHONE_TAKEN" | "PERM_DENIED" | "PERM_ROLE_REQUIRED" | "FEATURE_NOT_IN_PLAN" | "FEATURE_LIMIT_REACHED" | "TENANT_ID_REQUIRED" | "TENANT_NOT_FOUND" | "TENANT_SUSPENDED" | "TENANT_READONLY" | "INVITATION_EXPIRED" | "INVITATION_ALREADY_ACCEPTED" | "VALIDATION_FAILED" | "RULE_FUND_RESTRICTION_VIOLATED" | "RULE_WAQF_CORPUS_PROTECTED" | "RULE_LEDGER_IMMUTABLE" | "RULE_LAST_ADMIN" | "RULE_DUES_ALREADY_SETTLED" | "RULE_DUES_OVERPAYMENT" | "RULE_PAYROLL_ALREADY_POSTED" | "SYNC_CURSOR_TOO_OLD" | "SYNC_DEPENDENCY_NOT_FOUND" | "SYNC_EPOCH_MISMATCH" | "CONFLICT_VERSION_MISMATCH" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_KEY_REQUIRED" | "NOT_FOUND" | "RATE_LIMIT_EXCEEDED" | "INTERNAL_ERROR";
+                                message: string;
+                                requestId: string;
+                                details?: unknown;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/sync/bootstrap": {
         parameters: {
             query?: never;

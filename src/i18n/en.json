@@ -39,6 +39,7 @@
     "committee": "Committee",
     "events": "Events",
     "announcements": "Announcements",
+    "statistics": "Statistics",
     "back": "Back"
   },
   "common": {
@@ -142,5 +143,13 @@
     "announcementTitle": "Title",
     "body": "Message",
     "urgent": "Urgent (janazah)"
+  },
+  "statistics": {
+    "thisMonth": "This month",
+    "income": "Income",
+    "expenditure": "Expenditure",
+    "net": "Net",
+    "fundBalances": "Fund balances",
+    "donationTrends": "Donation trends (6 months)"
   }
 }

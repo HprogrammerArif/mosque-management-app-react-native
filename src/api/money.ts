@@ -33,6 +33,8 @@ export type PayrollLineResponse =
 export type CreatePayrollRunRequest = Body<'/api/v1/mosques/{mosqueId}/payroll/runs', 'post'>;
 export type CommitteeMemberResponse = Json<'/api/v1/mosques/{mosqueId}/committee', 'post'>;
 export type CreateCommitteeMemberRequest = Body<'/api/v1/mosques/{mosqueId}/committee', 'post'>;
+export type EventResponse = Json<'/api/v1/mosques/{mosqueId}/events', 'post'>;
+export type CreateEventRequest = Body<'/api/v1/mosques/{mosqueId}/events', 'post'>;
 
 export function listFunds(api: ApiClient, mosqueId: string): Promise<FundResponse[]> {
   return api.get<FundResponse[]>(`/mosques/${mosqueId}/funds`, mosqueId);
@@ -158,4 +160,14 @@ export function createCommitteeMember(
   api: ApiClient, mosqueId: string, input: CreateCommitteeMemberRequest, idempotencyKey: string,
 ): Promise<CommitteeMemberResponse> {
   return api.post<CommitteeMemberResponse>(`/mosques/${mosqueId}/committee`, input, { tenantId: mosqueId, idempotencyKey });
+}
+
+export function listUpcomingEvents(api: ApiClient, mosqueId: string): Promise<EventResponse[]> {
+  return api.get<EventResponse[]>(`/mosques/${mosqueId}/events`, mosqueId);
+}
+
+export function createEvent(
+  api: ApiClient, mosqueId: string, input: CreateEventRequest, idempotencyKey: string,
+): Promise<EventResponse> {
+  return api.post<EventResponse>(`/mosques/${mosqueId}/events`, input, { tenantId: mosqueId, idempotencyKey });
 }

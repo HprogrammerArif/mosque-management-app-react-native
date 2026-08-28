@@ -37,6 +37,7 @@
     "dues": "Dues",
     "payroll": "Payroll",
     "committee": "Committee",
+    "events": "Events",
     "back": "Back"
   },
   "common": {
@@ -126,5 +127,12 @@
     "empty": "No committee members yet.",
     "memberName": "Member name",
     "position": "Position (optional)"
+  },
+  "events": {
+    "add": "Add event",
+    "empty": "No upcoming events.",
+    "eventTitle": "Event title",
+    "time": "Time (24h, HH:MM)",
+    "location": "Location (optional)"
   }
 }

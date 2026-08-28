@@ -27,6 +27,20 @@ export const prayerConfig = sqliteTable('prayer_config', {
   jumuahTime: text('jumuah_time'),
 });
 
+// Cached the same way as mosques/prayerConfig (sync-mosque.ts's one-shot fetch-then-write)
+// — NOT sync-engine-backed like households/donations, since funds are platform-managed
+// (seeded at provisioning, essentially read-only from the app's side) rather than
+// something a device edits offline. Existing purely so the donation-recording form's
+// fund picker still has options with no network: without this table, opening "record
+// donation" for the first time in a session while offline left the picker empty, since
+// it fetched funds live via REST with no fallback.
+export const funds = sqliteTable('funds', {
+  id: text('id').primaryKey(),
+  type: text('type').notNull(),
+  name: text('name').notNull(),
+  zakatEligible: integer('zakat_eligible', { mode: 'boolean' }).notNull().default(false),
+});
+
 // Households and donations carry sync metadata (offline-sync-protocol.md §4.1):
 // serverVersion/changeSeq/hlc are null until the first successful sync ("never
 // synced"); dirty/pendingOp track an in-flight local write awaiting acknowledgement.

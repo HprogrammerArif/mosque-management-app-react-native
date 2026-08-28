@@ -1,7 +1,8 @@
 import { eq } from 'drizzle-orm';
 import { openDb } from './db';
-import { mosques, prayerConfig } from './schema';
+import { mosques, prayerConfig, funds } from './schema';
 import { fetchMosque, fetchPrayerConfig } from '../api/mosques';
+import { listFunds } from '../api/money';
 import type { ApiClient } from '../api/client';
 
 /**
@@ -58,6 +59,31 @@ export async function syncMosqueConfig(api: ApiClient, mosqueId: string): Promis
       ishaFixedTime: config.ishaFixedTime, jumuahTime: config.jumuahTime,
     },
   });
+}
+
+/**
+ * Same one-shot fetch-then-write shape as syncMosqueConfig, for the same reason:
+ * funds are effectively read-only from the app's side (seeded at provisioning), so
+ * there's nothing to reconcile — just overwrite wholesale. Without this, the donation
+ * form's fund picker has no options the first time it's opened offline in a session.
+ */
+export async function syncFunds(api: ApiClient, mosqueId: string): Promise<void> {
+  const rows = await listFunds(api, mosqueId);
+  const db = await openDb();
+
+  for (const fund of rows) {
+    await db.insert(funds).values({
+      id: fund.id, type: fund.type, name: fund.name, zakatEligible: fund.zakatEligible,
+    }).onConflictDoUpdate({
+      target: funds.id,
+      set: { type: fund.type, name: fund.name, zakatEligible: fund.zakatEligible },
+    });
+  }
+}
+
+export async function getCachedFunds() {
+  const db = await openDb();
+  return db.select().from(funds);
 }
 
 export async function getCachedMosque(mosqueId: string) {

@@ -13,7 +13,7 @@ import { Button } from '../src/components/ui/Button';
 import { computePrayerTimes, type DayPrayerTimes } from '../src/lib/prayer-times';
 import { listMyMosques } from '../src/api/mosques';
 import {
-  syncMosqueConfig, getAnyCachedMosque, getCachedMosque, getCachedPrayerConfig,
+  syncMosqueConfig, getAnyCachedMosque, getCachedMosque, getCachedPrayerConfig, syncFunds,
 } from '../src/data/sync-mosque';
 import { bootstrapIfNeeded } from '../src/data/sync-engine';
 
@@ -41,7 +41,7 @@ async function resolveMosque(): Promise<MosqueSummary | null> {
   const first = mine[0];
   if (!first) return null;
 
-  await syncMosqueConfig(api, first.id);
+  await Promise.all([syncMosqueConfig(api, first.id), syncFunds(api, first.id)]);
   const synced = await getCachedMosque(first.id);
   return synced;
 }
@@ -77,6 +77,7 @@ export default function Index() {
 
       // Refresh in the background — the screen already has something to show.
       void syncMosqueConfig(api, resolved.id);
+      void syncFunds(api, resolved.id);
       // One-time seed of the sync engine's local tables (households/donations) — a
       // no-op after the first successful call (bootstrapIfNeeded checks sync_state).
       void bootstrapIfNeeded(api, resolved.id);

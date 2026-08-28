@@ -9,9 +9,11 @@ import { useMosque } from '../../src/stores/mosque';
 import { Button } from '../../src/components/ui/Button';
 import { Input } from '../../src/components/ui/Input';
 import { SelectField } from '../../src/components/ui/SelectField';
-import { listFunds, type FundResponse } from '../../src/api/money';
+import { getCachedFunds } from '../../src/data/sync-mosque';
 import { recordDonationOffline, runSync } from '../../src/data/sync-engine';
 import { newEntityId } from '../../src/lib/id';
+
+type CachedFund = { id: string; name: string };
 
 const DONATION_METHODS = ['CASH', 'BANK', 'MOBILE_MONEY', 'CARD', 'CHEQUE', 'IN_KIND'] as const;
 
@@ -34,7 +36,7 @@ export default function RecordDonation() {
   const s = useStyles(formStyles);
   const mosqueId = useMosque((state) => state.currentMosqueId);
 
-  const [funds, setFunds] = useState<FundResponse[]>([]);
+  const [funds, setFunds] = useState<CachedFund[]>([]);
   const [fundId, setFundId] = useState<string | null>(null);
   const [amount, setAmount] = useState('');
   const [occurredOn, setOccurredOn] = useState(todayIso());
@@ -45,9 +47,12 @@ export default function RecordDonation() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (mosqueId === null) return;
-    void listFunds(api, mosqueId).then(setFunds);
-  }, [mosqueId]);
+    // Offline-first, matching recordDonationOffline itself: this screen must work with
+    // no network the first time it's opened in a session (roadmap's demo script records
+    // donations mid-airplane-mode) — funds are cached locally by sync-mosque.ts's
+    // syncFunds, refreshed in the background at app launch, not fetched live here.
+    void getCachedFunds().then(setFunds);
+  }, []);
 
   async function handleSave(): Promise<void> {
     if (mosqueId === null || fundId === null || method === null) return;

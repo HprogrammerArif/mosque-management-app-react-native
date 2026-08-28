@@ -34,6 +34,7 @@
     "donations": "Donations",
     "expenses": "Expenses",
     "households": "Households",
+    "dues": "Dues",
     "back": "Back"
   },
   "common": {
@@ -80,6 +81,26 @@
     "success": "Expense recorded",
     "errors": {
       "RULE_FUND_RESTRICTION_VIOLATED": "This fund can only pay for Zakat-eligible expense categories."
+    }
+  },
+  "dues": {
+    "generate": "Generate this month's dues",
+    "empty": "No dues charges for this period yet.",
+    "remaining": "remaining",
+    "recordPayment": "Record payment",
+    "payments": "Payments",
+    "noPayments": "No payments recorded yet.",
+    "waive": "Waive this charge",
+    "waiveReason": "Reason for waiving",
+    "statuses": {
+      "PENDING": "Pending",
+      "PARTIAL": "Partially paid",
+      "PAID": "Paid",
+      "WAIVED": "Waived"
+    },
+    "errors": {
+      "RULE_DUES_OVERPAYMENT": "That payment is more than what's left on this charge.",
+      "RULE_DUES_ALREADY_SETTLED": "This charge is already paid or waived."
     }
   }
 }

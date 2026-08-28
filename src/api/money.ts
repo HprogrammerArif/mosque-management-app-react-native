@@ -20,6 +20,11 @@ export type DonationResponse = Json<'/api/v1/mosques/{mosqueId}/donations', 'pos
 export type CreateDonationRequest = Body<'/api/v1/mosques/{mosqueId}/donations', 'post'>;
 export type ExpenseResponse = Json<'/api/v1/mosques/{mosqueId}/expenses', 'post'>;
 export type CreateExpenseRequest = Body<'/api/v1/mosques/{mosqueId}/expenses', 'post'>;
+export type DuesChargeResponse = Json<'/api/v1/mosques/{mosqueId}/dues/charges/{chargeId}', 'get'>;
+export type DuesPaymentResponse = Json<'/api/v1/mosques/{mosqueId}/dues/charges/{chargeId}/payments', 'post'>;
+export type GenerateDuesRequest = Body<'/api/v1/mosques/{mosqueId}/dues/generate', 'post'>;
+export type RecordDuesPaymentRequest = Body<'/api/v1/mosques/{mosqueId}/dues/charges/{chargeId}/payments', 'post'>;
+export type WaiveDuesChargeRequest = Body<'/api/v1/mosques/{mosqueId}/dues/charges/{chargeId}/waive', 'post'>;
 
 export function listFunds(api: ApiClient, mosqueId: string): Promise<FundResponse[]> {
   return api.get<FundResponse[]>(`/mosques/${mosqueId}/funds`, mosqueId);
@@ -62,5 +67,45 @@ export function recordExpense(
 ): Promise<ExpenseResponse> {
   return api.post<ExpenseResponse>(
     `/mosques/${mosqueId}/expenses`, input, { tenantId: mosqueId, idempotencyKey },
+  );
+}
+
+export function generateDues(
+  api: ApiClient, mosqueId: string, input: GenerateDuesRequest, idempotencyKey: string,
+): Promise<DuesChargeResponse[]> {
+  return api.post<DuesChargeResponse[]>(
+    `/mosques/${mosqueId}/dues/generate`, input, { tenantId: mosqueId, idempotencyKey },
+  );
+}
+
+export function listDuesChargesByPeriod(api: ApiClient, mosqueId: string, period: string): Promise<DuesChargeResponse[]> {
+  return api.get<DuesChargeResponse[]>(`/mosques/${mosqueId}/dues/charges?period=${encodeURIComponent(period)}`, mosqueId);
+}
+
+export function listDuesChargesByHousehold(api: ApiClient, mosqueId: string, householdId: string): Promise<DuesChargeResponse[]> {
+  return api.get<DuesChargeResponse[]>(`/mosques/${mosqueId}/households/${householdId}/dues`, mosqueId);
+}
+
+export function getDuesCharge(api: ApiClient, mosqueId: string, chargeId: string): Promise<DuesChargeResponse> {
+  return api.get<DuesChargeResponse>(`/mosques/${mosqueId}/dues/charges/${chargeId}`, mosqueId);
+}
+
+export function listDuesPayments(api: ApiClient, mosqueId: string, chargeId: string): Promise<DuesPaymentResponse[]> {
+  return api.get<DuesPaymentResponse[]>(`/mosques/${mosqueId}/dues/charges/${chargeId}/payments`, mosqueId);
+}
+
+export function recordDuesPayment(
+  api: ApiClient, mosqueId: string, chargeId: string, input: RecordDuesPaymentRequest, idempotencyKey: string,
+): Promise<DuesPaymentResponse> {
+  return api.post<DuesPaymentResponse>(
+    `/mosques/${mosqueId}/dues/charges/${chargeId}/payments`, input, { tenantId: mosqueId, idempotencyKey },
+  );
+}
+
+export function waiveDuesCharge(
+  api: ApiClient, mosqueId: string, chargeId: string, input: WaiveDuesChargeRequest, idempotencyKey: string,
+): Promise<DuesChargeResponse> {
+  return api.post<DuesChargeResponse>(
+    `/mosques/${mosqueId}/dues/charges/${chargeId}/waive`, input, { tenantId: mosqueId, idempotencyKey },
   );
 }

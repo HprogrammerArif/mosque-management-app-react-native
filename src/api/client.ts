@@ -14,6 +14,13 @@ export class ApiError extends Error {
 
 type TokenProvider = () => Promise<string | null>;
 
+export type RequestOptions = {
+  /** Belt-and-suspenders alongside :mosqueId in the path — see the note in request(). */
+  tenantId?: string;
+  /** Required by the backend's requireIdempotency middleware on every mutation. */
+  idempotencyKey?: string;
+};
+
 export class ApiClient {
   constructor(
     private readonly baseUrl: string,
@@ -21,7 +28,7 @@ export class ApiClient {
   ) {}
 
   private async request<T>(
-    method: 'GET' | 'POST' | 'PUT' | 'PATCH', path: string, body?: unknown, tenantId?: string,
+    method: 'GET' | 'POST' | 'PUT' | 'PATCH', path: string, body?: unknown, options: RequestOptions = {},
   ): Promise<T> {
     const token = await this.getToken();
     const headers: Record<string, string> = { 'Content-Type': 'application/json' };
@@ -29,7 +36,8 @@ export class ApiClient {
     // Belt-and-suspenders alongside :mosqueId in the path — TenantGuard (backend) prefers
     // the path param, but a caller may not always have one to interpolate, so pass it
     // here too when known (multi-tenancy doc: "header, or the path").
-    if (tenantId !== undefined) headers['X-Tenant-Id'] = tenantId;
+    if (options.tenantId !== undefined) headers['X-Tenant-Id'] = options.tenantId;
+    if (options.idempotencyKey !== undefined) headers['Idempotency-Key'] = options.idempotencyKey;
 
     const init: RequestInit = { method, headers };
     if (body !== undefined) init.body = JSON.stringify(body);
@@ -55,15 +63,15 @@ export class ApiClient {
   }
 
   get<T>(path: string, tenantId?: string): Promise<T> {
-    return this.request<T>('GET', path, undefined, tenantId);
+    return this.request<T>('GET', path, undefined, tenantId === undefined ? {} : { tenantId });
   }
-  post<T>(path: string, body: unknown, tenantId?: string): Promise<T> {
-    return this.request<T>('POST', path, body, tenantId);
+  post<T>(path: string, body: unknown, options?: RequestOptions): Promise<T> {
+    return this.request<T>('POST', path, body, options);
   }
-  put<T>(path: string, body: unknown, tenantId?: string): Promise<T> {
-    return this.request<T>('PUT', path, body, tenantId);
+  put<T>(path: string, body: unknown, options?: RequestOptions): Promise<T> {
+    return this.request<T>('PUT', path, body, options);
   }
-  patch<T>(path: string, body: unknown, tenantId?: string): Promise<T> {
-    return this.request<T>('PATCH', path, body, tenantId);
+  patch<T>(path: string, body: unknown, options?: RequestOptions): Promise<T> {
+    return this.request<T>('PATCH', path, body, options);
   }
 }

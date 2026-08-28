@@ -1019,6 +1019,1193 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/mosques/{mosqueId}/households": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List active households */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    mosqueId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            name: string;
+                            headIndividualId: string | null;
+                            addressLine1: string | null;
+                            area: string | null;
+                            phone: string | null;
+                            monthlyDuesMinor: number;
+                            collectorUserId: string | null;
+                            exempt: boolean;
+                            joinedOn: string | null;
+                            /** @enum {string} */
+                            status: "ACTIVE" | "INACTIVE" | "MOVED";
+                        }[];
+                    };
+                };
+                /** @description Error */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error?: {
+                                /** @enum {string} */
+                                code: "AUTH_INVALID_CREDENTIALS" | "AUTH_TOKEN_EXPIRED" | "AUTH_TOKEN_INVALID" | "AUTH_TOKEN_REUSED" | "AUTH_ACCOUNT_LOCKED" | "AUTH_EMAIL_TAKEN" | "AUTH_PHONE_TAKEN" | "PERM_DENIED" | "PERM_ROLE_REQUIRED" | "FEATURE_NOT_IN_PLAN" | "FEATURE_LIMIT_REACHED" | "TENANT_ID_REQUIRED" | "TENANT_NOT_FOUND" | "TENANT_SUSPENDED" | "TENANT_READONLY" | "INVITATION_EXPIRED" | "INVITATION_ALREADY_ACCEPTED" | "VALIDATION_FAILED" | "RULE_FUND_RESTRICTION_VIOLATED" | "RULE_WAQF_CORPUS_PROTECTED" | "RULE_LEDGER_IMMUTABLE" | "RULE_LAST_ADMIN" | "SYNC_CURSOR_TOO_OLD" | "SYNC_DEPENDENCY_NOT_FOUND" | "SYNC_EPOCH_MISMATCH" | "CONFLICT_VERSION_MISMATCH" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_KEY_REQUIRED" | "NOT_FOUND" | "RATE_LIMIT_EXCEEDED" | "INTERNAL_ERROR";
+                                message: string;
+                                requestId: string;
+                                details?: unknown;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Register a household */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    mosqueId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        name: string;
+                        /** @default null */
+                        addressLine1?: string | null;
+                        /** @default null */
+                        area?: string | null;
+                        /** @default null */
+                        phone?: string | null;
+                        /** @default 0 */
+                        monthlyDuesMinor?: number;
+                        /** @default null */
+                        collectorUserId?: string | null;
+                        /** @default false */
+                        exempt?: boolean;
+                        /** @default null */
+                        joinedOn?: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description Success */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            name: string;
+                            headIndividualId: string | null;
+                            addressLine1: string | null;
+                            area: string | null;
+                            phone: string | null;
+                            monthlyDuesMinor: number;
+                            collectorUserId: string | null;
+                            exempt: boolean;
+                            joinedOn: string | null;
+                            /** @enum {string} */
+                            status: "ACTIVE" | "INACTIVE" | "MOVED";
+                        };
+                    };
+                };
+                /** @description Error */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error?: {
+                                /** @enum {string} */
+                                code: "AUTH_INVALID_CREDENTIALS" | "AUTH_TOKEN_EXPIRED" | "AUTH_TOKEN_INVALID" | "AUTH_TOKEN_REUSED" | "AUTH_ACCOUNT_LOCKED" | "AUTH_EMAIL_TAKEN" | "AUTH_PHONE_TAKEN" | "PERM_DENIED" | "PERM_ROLE_REQUIRED" | "FEATURE_NOT_IN_PLAN" | "FEATURE_LIMIT_REACHED" | "TENANT_ID_REQUIRED" | "TENANT_NOT_FOUND" | "TENANT_SUSPENDED" | "TENANT_READONLY" | "INVITATION_EXPIRED" | "INVITATION_ALREADY_ACCEPTED" | "VALIDATION_FAILED" | "RULE_FUND_RESTRICTION_VIOLATED" | "RULE_WAQF_CORPUS_PROTECTED" | "RULE_LEDGER_IMMUTABLE" | "RULE_LAST_ADMIN" | "SYNC_CURSOR_TOO_OLD" | "SYNC_DEPENDENCY_NOT_FOUND" | "SYNC_EPOCH_MISMATCH" | "CONFLICT_VERSION_MISMATCH" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_KEY_REQUIRED" | "NOT_FOUND" | "RATE_LIMIT_EXCEEDED" | "INTERNAL_ERROR";
+                                message: string;
+                                requestId: string;
+                                details?: unknown;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/mosques/{mosqueId}/households/{householdId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a household */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    mosqueId: string;
+                    householdId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            name: string;
+                            headIndividualId: string | null;
+                            addressLine1: string | null;
+                            area: string | null;
+                            phone: string | null;
+                            monthlyDuesMinor: number;
+                            collectorUserId: string | null;
+                            exempt: boolean;
+                            joinedOn: string | null;
+                            /** @enum {string} */
+                            status: "ACTIVE" | "INACTIVE" | "MOVED";
+                        };
+                    };
+                };
+                /** @description Error */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error?: {
+                                /** @enum {string} */
+                                code: "AUTH_INVALID_CREDENTIALS" | "AUTH_TOKEN_EXPIRED" | "AUTH_TOKEN_INVALID" | "AUTH_TOKEN_REUSED" | "AUTH_ACCOUNT_LOCKED" | "AUTH_EMAIL_TAKEN" | "AUTH_PHONE_TAKEN" | "PERM_DENIED" | "PERM_ROLE_REQUIRED" | "FEATURE_NOT_IN_PLAN" | "FEATURE_LIMIT_REACHED" | "TENANT_ID_REQUIRED" | "TENANT_NOT_FOUND" | "TENANT_SUSPENDED" | "TENANT_READONLY" | "INVITATION_EXPIRED" | "INVITATION_ALREADY_ACCEPTED" | "VALIDATION_FAILED" | "RULE_FUND_RESTRICTION_VIOLATED" | "RULE_WAQF_CORPUS_PROTECTED" | "RULE_LEDGER_IMMUTABLE" | "RULE_LAST_ADMIN" | "SYNC_CURSOR_TOO_OLD" | "SYNC_DEPENDENCY_NOT_FOUND" | "SYNC_EPOCH_MISMATCH" | "CONFLICT_VERSION_MISMATCH" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_KEY_REQUIRED" | "NOT_FOUND" | "RATE_LIMIT_EXCEEDED" | "INTERNAL_ERROR";
+                                message: string;
+                                requestId: string;
+                                details?: unknown;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/mosques/{mosqueId}/households/{householdId}/individuals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List a household's members */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    mosqueId: string;
+                    householdId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            householdId: string;
+                            userId: string | null;
+                            fullName: string;
+                            /** @enum {string} */
+                            relation: "HEAD" | "SPOUSE" | "CHILD" | "PARENT" | "SIBLING" | "OTHER";
+                            phone: string | null;
+                            dateOfBirth: string | null;
+                            gender: string | null;
+                        }[];
+                    };
+                };
+                /** @description Error */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error?: {
+                                /** @enum {string} */
+                                code: "AUTH_INVALID_CREDENTIALS" | "AUTH_TOKEN_EXPIRED" | "AUTH_TOKEN_INVALID" | "AUTH_TOKEN_REUSED" | "AUTH_ACCOUNT_LOCKED" | "AUTH_EMAIL_TAKEN" | "AUTH_PHONE_TAKEN" | "PERM_DENIED" | "PERM_ROLE_REQUIRED" | "FEATURE_NOT_IN_PLAN" | "FEATURE_LIMIT_REACHED" | "TENANT_ID_REQUIRED" | "TENANT_NOT_FOUND" | "TENANT_SUSPENDED" | "TENANT_READONLY" | "INVITATION_EXPIRED" | "INVITATION_ALREADY_ACCEPTED" | "VALIDATION_FAILED" | "RULE_FUND_RESTRICTION_VIOLATED" | "RULE_WAQF_CORPUS_PROTECTED" | "RULE_LEDGER_IMMUTABLE" | "RULE_LAST_ADMIN" | "SYNC_CURSOR_TOO_OLD" | "SYNC_DEPENDENCY_NOT_FOUND" | "SYNC_EPOCH_MISMATCH" | "CONFLICT_VERSION_MISMATCH" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_KEY_REQUIRED" | "NOT_FOUND" | "RATE_LIMIT_EXCEEDED" | "INTERNAL_ERROR";
+                                message: string;
+                                requestId: string;
+                                details?: unknown;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Add a household member */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    mosqueId: string;
+                    householdId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @default null */
+                        userId?: string | null;
+                        fullName: string;
+                        /** @enum {string} */
+                        relation: "HEAD" | "SPOUSE" | "CHILD" | "PARENT" | "SIBLING" | "OTHER";
+                        /** @default null */
+                        phone?: string | null;
+                        /** @default null */
+                        dateOfBirth?: string | null;
+                        /** @default null */
+                        gender?: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description Success */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            householdId: string;
+                            userId: string | null;
+                            fullName: string;
+                            /** @enum {string} */
+                            relation: "HEAD" | "SPOUSE" | "CHILD" | "PARENT" | "SIBLING" | "OTHER";
+                            phone: string | null;
+                            dateOfBirth: string | null;
+                            gender: string | null;
+                        };
+                    };
+                };
+                /** @description Error */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error?: {
+                                /** @enum {string} */
+                                code: "AUTH_INVALID_CREDENTIALS" | "AUTH_TOKEN_EXPIRED" | "AUTH_TOKEN_INVALID" | "AUTH_TOKEN_REUSED" | "AUTH_ACCOUNT_LOCKED" | "AUTH_EMAIL_TAKEN" | "AUTH_PHONE_TAKEN" | "PERM_DENIED" | "PERM_ROLE_REQUIRED" | "FEATURE_NOT_IN_PLAN" | "FEATURE_LIMIT_REACHED" | "TENANT_ID_REQUIRED" | "TENANT_NOT_FOUND" | "TENANT_SUSPENDED" | "TENANT_READONLY" | "INVITATION_EXPIRED" | "INVITATION_ALREADY_ACCEPTED" | "VALIDATION_FAILED" | "RULE_FUND_RESTRICTION_VIOLATED" | "RULE_WAQF_CORPUS_PROTECTED" | "RULE_LEDGER_IMMUTABLE" | "RULE_LAST_ADMIN" | "SYNC_CURSOR_TOO_OLD" | "SYNC_DEPENDENCY_NOT_FOUND" | "SYNC_EPOCH_MISMATCH" | "CONFLICT_VERSION_MISMATCH" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_KEY_REQUIRED" | "NOT_FOUND" | "RATE_LIMIT_EXCEEDED" | "INTERNAL_ERROR";
+                                message: string;
+                                requestId: string;
+                                details?: unknown;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/mosques/{mosqueId}/donations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List recent donations */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    mosqueId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            fundId: string;
+                            amountMinor: number;
+                            currency: string;
+                            occurredOn: string;
+                            /** @enum {string} */
+                            method: "CASH" | "BANK" | "MOBILE_MONEY" | "CARD" | "CHEQUE" | "IN_KIND";
+                            donorHouseholdId: string | null;
+                            donorName: string | null;
+                            anonymous: boolean;
+                            receiptNo: string | null;
+                            note: string | null;
+                            adjustsId: string | null;
+                            adjustmentReason: string | null;
+                            createdBy: string;
+                            createdAt: string;
+                        }[];
+                    };
+                };
+                /** @description Error */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error?: {
+                                /** @enum {string} */
+                                code: "AUTH_INVALID_CREDENTIALS" | "AUTH_TOKEN_EXPIRED" | "AUTH_TOKEN_INVALID" | "AUTH_TOKEN_REUSED" | "AUTH_ACCOUNT_LOCKED" | "AUTH_EMAIL_TAKEN" | "AUTH_PHONE_TAKEN" | "PERM_DENIED" | "PERM_ROLE_REQUIRED" | "FEATURE_NOT_IN_PLAN" | "FEATURE_LIMIT_REACHED" | "TENANT_ID_REQUIRED" | "TENANT_NOT_FOUND" | "TENANT_SUSPENDED" | "TENANT_READONLY" | "INVITATION_EXPIRED" | "INVITATION_ALREADY_ACCEPTED" | "VALIDATION_FAILED" | "RULE_FUND_RESTRICTION_VIOLATED" | "RULE_WAQF_CORPUS_PROTECTED" | "RULE_LEDGER_IMMUTABLE" | "RULE_LAST_ADMIN" | "SYNC_CURSOR_TOO_OLD" | "SYNC_DEPENDENCY_NOT_FOUND" | "SYNC_EPOCH_MISMATCH" | "CONFLICT_VERSION_MISMATCH" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_KEY_REQUIRED" | "NOT_FOUND" | "RATE_LIMIT_EXCEEDED" | "INTERNAL_ERROR";
+                                message: string;
+                                requestId: string;
+                                details?: unknown;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Record a donation */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    mosqueId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        fundId: string;
+                        amountMinor: number;
+                        /**
+                         * @default BDT
+                         * @enum {string}
+                         */
+                        currency?: "BDT" | "USD" | "GBP" | "EUR";
+                        occurredOn: string;
+                        /** @enum {string} */
+                        method: "CASH" | "BANK" | "MOBILE_MONEY" | "CARD" | "CHEQUE" | "IN_KIND";
+                        /** @default null */
+                        donorHouseholdId?: string | null;
+                        /** @default null */
+                        donorName?: string | null;
+                        /** @default false */
+                        anonymous?: boolean;
+                        /** @default null */
+                        receiptNo?: string | null;
+                        /** @default null */
+                        note?: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description Success */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            fundId: string;
+                            amountMinor: number;
+                            currency: string;
+                            occurredOn: string;
+                            /** @enum {string} */
+                            method: "CASH" | "BANK" | "MOBILE_MONEY" | "CARD" | "CHEQUE" | "IN_KIND";
+                            donorHouseholdId: string | null;
+                            donorName: string | null;
+                            anonymous: boolean;
+                            receiptNo: string | null;
+                            note: string | null;
+                            adjustsId: string | null;
+                            adjustmentReason: string | null;
+                            createdBy: string;
+                            createdAt: string;
+                        };
+                    };
+                };
+                /** @description Error */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error?: {
+                                /** @enum {string} */
+                                code: "AUTH_INVALID_CREDENTIALS" | "AUTH_TOKEN_EXPIRED" | "AUTH_TOKEN_INVALID" | "AUTH_TOKEN_REUSED" | "AUTH_ACCOUNT_LOCKED" | "AUTH_EMAIL_TAKEN" | "AUTH_PHONE_TAKEN" | "PERM_DENIED" | "PERM_ROLE_REQUIRED" | "FEATURE_NOT_IN_PLAN" | "FEATURE_LIMIT_REACHED" | "TENANT_ID_REQUIRED" | "TENANT_NOT_FOUND" | "TENANT_SUSPENDED" | "TENANT_READONLY" | "INVITATION_EXPIRED" | "INVITATION_ALREADY_ACCEPTED" | "VALIDATION_FAILED" | "RULE_FUND_RESTRICTION_VIOLATED" | "RULE_WAQF_CORPUS_PROTECTED" | "RULE_LEDGER_IMMUTABLE" | "RULE_LAST_ADMIN" | "SYNC_CURSOR_TOO_OLD" | "SYNC_DEPENDENCY_NOT_FOUND" | "SYNC_EPOCH_MISMATCH" | "CONFLICT_VERSION_MISMATCH" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_KEY_REQUIRED" | "NOT_FOUND" | "RATE_LIMIT_EXCEEDED" | "INTERNAL_ERROR";
+                                message: string;
+                                requestId: string;
+                                details?: unknown;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/mosques/{mosqueId}/donations/balance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Fund balances (sum of donations per fund) */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    mosqueId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            fundId: string;
+                            totalMinor: number;
+                        }[];
+                    };
+                };
+                /** @description Error */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error?: {
+                                /** @enum {string} */
+                                code: "AUTH_INVALID_CREDENTIALS" | "AUTH_TOKEN_EXPIRED" | "AUTH_TOKEN_INVALID" | "AUTH_TOKEN_REUSED" | "AUTH_ACCOUNT_LOCKED" | "AUTH_EMAIL_TAKEN" | "AUTH_PHONE_TAKEN" | "PERM_DENIED" | "PERM_ROLE_REQUIRED" | "FEATURE_NOT_IN_PLAN" | "FEATURE_LIMIT_REACHED" | "TENANT_ID_REQUIRED" | "TENANT_NOT_FOUND" | "TENANT_SUSPENDED" | "TENANT_READONLY" | "INVITATION_EXPIRED" | "INVITATION_ALREADY_ACCEPTED" | "VALIDATION_FAILED" | "RULE_FUND_RESTRICTION_VIOLATED" | "RULE_WAQF_CORPUS_PROTECTED" | "RULE_LEDGER_IMMUTABLE" | "RULE_LAST_ADMIN" | "SYNC_CURSOR_TOO_OLD" | "SYNC_DEPENDENCY_NOT_FOUND" | "SYNC_EPOCH_MISMATCH" | "CONFLICT_VERSION_MISMATCH" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_KEY_REQUIRED" | "NOT_FOUND" | "RATE_LIMIT_EXCEEDED" | "INTERNAL_ERROR";
+                                message: string;
+                                requestId: string;
+                                details?: unknown;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/mosques/{mosqueId}/donations/{donationId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a donation */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    mosqueId: string;
+                    donationId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            fundId: string;
+                            amountMinor: number;
+                            currency: string;
+                            occurredOn: string;
+                            /** @enum {string} */
+                            method: "CASH" | "BANK" | "MOBILE_MONEY" | "CARD" | "CHEQUE" | "IN_KIND";
+                            donorHouseholdId: string | null;
+                            donorName: string | null;
+                            anonymous: boolean;
+                            receiptNo: string | null;
+                            note: string | null;
+                            adjustsId: string | null;
+                            adjustmentReason: string | null;
+                            createdBy: string;
+                            createdAt: string;
+                        };
+                    };
+                };
+                /** @description Error */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error?: {
+                                /** @enum {string} */
+                                code: "AUTH_INVALID_CREDENTIALS" | "AUTH_TOKEN_EXPIRED" | "AUTH_TOKEN_INVALID" | "AUTH_TOKEN_REUSED" | "AUTH_ACCOUNT_LOCKED" | "AUTH_EMAIL_TAKEN" | "AUTH_PHONE_TAKEN" | "PERM_DENIED" | "PERM_ROLE_REQUIRED" | "FEATURE_NOT_IN_PLAN" | "FEATURE_LIMIT_REACHED" | "TENANT_ID_REQUIRED" | "TENANT_NOT_FOUND" | "TENANT_SUSPENDED" | "TENANT_READONLY" | "INVITATION_EXPIRED" | "INVITATION_ALREADY_ACCEPTED" | "VALIDATION_FAILED" | "RULE_FUND_RESTRICTION_VIOLATED" | "RULE_WAQF_CORPUS_PROTECTED" | "RULE_LEDGER_IMMUTABLE" | "RULE_LAST_ADMIN" | "SYNC_CURSOR_TOO_OLD" | "SYNC_DEPENDENCY_NOT_FOUND" | "SYNC_EPOCH_MISMATCH" | "CONFLICT_VERSION_MISMATCH" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_KEY_REQUIRED" | "NOT_FOUND" | "RATE_LIMIT_EXCEEDED" | "INTERNAL_ERROR";
+                                message: string;
+                                requestId: string;
+                                details?: unknown;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/mosques/{mosqueId}/donations/{donationId}/adjust": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Correct a donation with a linked adjustment entry */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    mosqueId: string;
+                    donationId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        reason: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Success */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            fundId: string;
+                            amountMinor: number;
+                            currency: string;
+                            occurredOn: string;
+                            /** @enum {string} */
+                            method: "CASH" | "BANK" | "MOBILE_MONEY" | "CARD" | "CHEQUE" | "IN_KIND";
+                            donorHouseholdId: string | null;
+                            donorName: string | null;
+                            anonymous: boolean;
+                            receiptNo: string | null;
+                            note: string | null;
+                            adjustsId: string | null;
+                            adjustmentReason: string | null;
+                            createdBy: string;
+                            createdAt: string;
+                        };
+                    };
+                };
+                /** @description Error */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error?: {
+                                /** @enum {string} */
+                                code: "AUTH_INVALID_CREDENTIALS" | "AUTH_TOKEN_EXPIRED" | "AUTH_TOKEN_INVALID" | "AUTH_TOKEN_REUSED" | "AUTH_ACCOUNT_LOCKED" | "AUTH_EMAIL_TAKEN" | "AUTH_PHONE_TAKEN" | "PERM_DENIED" | "PERM_ROLE_REQUIRED" | "FEATURE_NOT_IN_PLAN" | "FEATURE_LIMIT_REACHED" | "TENANT_ID_REQUIRED" | "TENANT_NOT_FOUND" | "TENANT_SUSPENDED" | "TENANT_READONLY" | "INVITATION_EXPIRED" | "INVITATION_ALREADY_ACCEPTED" | "VALIDATION_FAILED" | "RULE_FUND_RESTRICTION_VIOLATED" | "RULE_WAQF_CORPUS_PROTECTED" | "RULE_LEDGER_IMMUTABLE" | "RULE_LAST_ADMIN" | "SYNC_CURSOR_TOO_OLD" | "SYNC_DEPENDENCY_NOT_FOUND" | "SYNC_EPOCH_MISMATCH" | "CONFLICT_VERSION_MISMATCH" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_KEY_REQUIRED" | "NOT_FOUND" | "RATE_LIMIT_EXCEEDED" | "INTERNAL_ERROR";
+                                message: string;
+                                requestId: string;
+                                details?: unknown;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/mosques/{mosqueId}/expense-categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List expense categories */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    mosqueId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            name: string;
+                            zakatEligible: boolean;
+                            /** @enum {string|null} */
+                            asnafCategory: "FUQARA" | "MASAKIN" | "AMILIN" | "MUALLAFAT" | "RIQAB" | "GHARIMIN" | "FI_SABILILLAH" | "IBN_SABIL" | null;
+                            isSystem: boolean;
+                        }[];
+                    };
+                };
+                /** @description Error */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error?: {
+                                /** @enum {string} */
+                                code: "AUTH_INVALID_CREDENTIALS" | "AUTH_TOKEN_EXPIRED" | "AUTH_TOKEN_INVALID" | "AUTH_TOKEN_REUSED" | "AUTH_ACCOUNT_LOCKED" | "AUTH_EMAIL_TAKEN" | "AUTH_PHONE_TAKEN" | "PERM_DENIED" | "PERM_ROLE_REQUIRED" | "FEATURE_NOT_IN_PLAN" | "FEATURE_LIMIT_REACHED" | "TENANT_ID_REQUIRED" | "TENANT_NOT_FOUND" | "TENANT_SUSPENDED" | "TENANT_READONLY" | "INVITATION_EXPIRED" | "INVITATION_ALREADY_ACCEPTED" | "VALIDATION_FAILED" | "RULE_FUND_RESTRICTION_VIOLATED" | "RULE_WAQF_CORPUS_PROTECTED" | "RULE_LEDGER_IMMUTABLE" | "RULE_LAST_ADMIN" | "SYNC_CURSOR_TOO_OLD" | "SYNC_DEPENDENCY_NOT_FOUND" | "SYNC_EPOCH_MISMATCH" | "CONFLICT_VERSION_MISMATCH" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_KEY_REQUIRED" | "NOT_FOUND" | "RATE_LIMIT_EXCEEDED" | "INTERNAL_ERROR";
+                                message: string;
+                                requestId: string;
+                                details?: unknown;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Create a custom expense category */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    mosqueId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        name: string;
+                        /** @default false */
+                        zakatEligible?: boolean;
+                        /**
+                         * @default null
+                         * @enum {string|null}
+                         */
+                        asnafCategory?: "FUQARA" | "MASAKIN" | "AMILIN" | "MUALLAFAT" | "RIQAB" | "GHARIMIN" | "FI_SABILILLAH" | "IBN_SABIL" | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description Success */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            name: string;
+                            zakatEligible: boolean;
+                            /** @enum {string|null} */
+                            asnafCategory: "FUQARA" | "MASAKIN" | "AMILIN" | "MUALLAFAT" | "RIQAB" | "GHARIMIN" | "FI_SABILILLAH" | "IBN_SABIL" | null;
+                            isSystem: boolean;
+                        };
+                    };
+                };
+                /** @description Error */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error?: {
+                                /** @enum {string} */
+                                code: "AUTH_INVALID_CREDENTIALS" | "AUTH_TOKEN_EXPIRED" | "AUTH_TOKEN_INVALID" | "AUTH_TOKEN_REUSED" | "AUTH_ACCOUNT_LOCKED" | "AUTH_EMAIL_TAKEN" | "AUTH_PHONE_TAKEN" | "PERM_DENIED" | "PERM_ROLE_REQUIRED" | "FEATURE_NOT_IN_PLAN" | "FEATURE_LIMIT_REACHED" | "TENANT_ID_REQUIRED" | "TENANT_NOT_FOUND" | "TENANT_SUSPENDED" | "TENANT_READONLY" | "INVITATION_EXPIRED" | "INVITATION_ALREADY_ACCEPTED" | "VALIDATION_FAILED" | "RULE_FUND_RESTRICTION_VIOLATED" | "RULE_WAQF_CORPUS_PROTECTED" | "RULE_LEDGER_IMMUTABLE" | "RULE_LAST_ADMIN" | "SYNC_CURSOR_TOO_OLD" | "SYNC_DEPENDENCY_NOT_FOUND" | "SYNC_EPOCH_MISMATCH" | "CONFLICT_VERSION_MISMATCH" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_KEY_REQUIRED" | "NOT_FOUND" | "RATE_LIMIT_EXCEEDED" | "INTERNAL_ERROR";
+                                message: string;
+                                requestId: string;
+                                details?: unknown;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/mosques/{mosqueId}/expenses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List recent expenses */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    mosqueId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            fundId: string;
+                            categoryId: string;
+                            amountMinor: number;
+                            currency: string;
+                            occurredOn: string;
+                            payee: string | null;
+                            description: string | null;
+                            /** @enum {string} */
+                            method: "CASH" | "BANK" | "MOBILE_MONEY" | "CARD" | "CHEQUE" | "IN_KIND";
+                            /** @enum {string} */
+                            approvalStatus: "DRAFT" | "PENDING" | "POSTED" | "REJECTED";
+                            adjustsId: string | null;
+                            adjustmentReason: string | null;
+                            createdBy: string;
+                            createdAt: string;
+                        }[];
+                    };
+                };
+                /** @description Error */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error?: {
+                                /** @enum {string} */
+                                code: "AUTH_INVALID_CREDENTIALS" | "AUTH_TOKEN_EXPIRED" | "AUTH_TOKEN_INVALID" | "AUTH_TOKEN_REUSED" | "AUTH_ACCOUNT_LOCKED" | "AUTH_EMAIL_TAKEN" | "AUTH_PHONE_TAKEN" | "PERM_DENIED" | "PERM_ROLE_REQUIRED" | "FEATURE_NOT_IN_PLAN" | "FEATURE_LIMIT_REACHED" | "TENANT_ID_REQUIRED" | "TENANT_NOT_FOUND" | "TENANT_SUSPENDED" | "TENANT_READONLY" | "INVITATION_EXPIRED" | "INVITATION_ALREADY_ACCEPTED" | "VALIDATION_FAILED" | "RULE_FUND_RESTRICTION_VIOLATED" | "RULE_WAQF_CORPUS_PROTECTED" | "RULE_LEDGER_IMMUTABLE" | "RULE_LAST_ADMIN" | "SYNC_CURSOR_TOO_OLD" | "SYNC_DEPENDENCY_NOT_FOUND" | "SYNC_EPOCH_MISMATCH" | "CONFLICT_VERSION_MISMATCH" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_KEY_REQUIRED" | "NOT_FOUND" | "RATE_LIMIT_EXCEEDED" | "INTERNAL_ERROR";
+                                message: string;
+                                requestId: string;
+                                details?: unknown;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Record an expense (enforces BR-1 fund restriction) */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    mosqueId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        fundId: string;
+                        categoryId: string;
+                        amountMinor: number;
+                        /**
+                         * @default BDT
+                         * @enum {string}
+                         */
+                        currency?: "BDT" | "USD" | "GBP" | "EUR";
+                        occurredOn: string;
+                        /** @default null */
+                        payee?: string | null;
+                        /** @default null */
+                        description?: string | null;
+                        /** @enum {string} */
+                        method: "CASH" | "BANK" | "MOBILE_MONEY" | "CARD" | "CHEQUE" | "IN_KIND";
+                    };
+                };
+            };
+            responses: {
+                /** @description Success */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            fundId: string;
+                            categoryId: string;
+                            amountMinor: number;
+                            currency: string;
+                            occurredOn: string;
+                            payee: string | null;
+                            description: string | null;
+                            /** @enum {string} */
+                            method: "CASH" | "BANK" | "MOBILE_MONEY" | "CARD" | "CHEQUE" | "IN_KIND";
+                            /** @enum {string} */
+                            approvalStatus: "DRAFT" | "PENDING" | "POSTED" | "REJECTED";
+                            adjustsId: string | null;
+                            adjustmentReason: string | null;
+                            createdBy: string;
+                            createdAt: string;
+                        };
+                    };
+                };
+                /** @description Error */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error?: {
+                                /** @enum {string} */
+                                code: "AUTH_INVALID_CREDENTIALS" | "AUTH_TOKEN_EXPIRED" | "AUTH_TOKEN_INVALID" | "AUTH_TOKEN_REUSED" | "AUTH_ACCOUNT_LOCKED" | "AUTH_EMAIL_TAKEN" | "AUTH_PHONE_TAKEN" | "PERM_DENIED" | "PERM_ROLE_REQUIRED" | "FEATURE_NOT_IN_PLAN" | "FEATURE_LIMIT_REACHED" | "TENANT_ID_REQUIRED" | "TENANT_NOT_FOUND" | "TENANT_SUSPENDED" | "TENANT_READONLY" | "INVITATION_EXPIRED" | "INVITATION_ALREADY_ACCEPTED" | "VALIDATION_FAILED" | "RULE_FUND_RESTRICTION_VIOLATED" | "RULE_WAQF_CORPUS_PROTECTED" | "RULE_LEDGER_IMMUTABLE" | "RULE_LAST_ADMIN" | "SYNC_CURSOR_TOO_OLD" | "SYNC_DEPENDENCY_NOT_FOUND" | "SYNC_EPOCH_MISMATCH" | "CONFLICT_VERSION_MISMATCH" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_KEY_REQUIRED" | "NOT_FOUND" | "RATE_LIMIT_EXCEEDED" | "INTERNAL_ERROR";
+                                message: string;
+                                requestId: string;
+                                details?: unknown;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/mosques/{mosqueId}/expenses/{expenseId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get an expense */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    mosqueId: string;
+                    expenseId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            fundId: string;
+                            categoryId: string;
+                            amountMinor: number;
+                            currency: string;
+                            occurredOn: string;
+                            payee: string | null;
+                            description: string | null;
+                            /** @enum {string} */
+                            method: "CASH" | "BANK" | "MOBILE_MONEY" | "CARD" | "CHEQUE" | "IN_KIND";
+                            /** @enum {string} */
+                            approvalStatus: "DRAFT" | "PENDING" | "POSTED" | "REJECTED";
+                            adjustsId: string | null;
+                            adjustmentReason: string | null;
+                            createdBy: string;
+                            createdAt: string;
+                        };
+                    };
+                };
+                /** @description Error */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error?: {
+                                /** @enum {string} */
+                                code: "AUTH_INVALID_CREDENTIALS" | "AUTH_TOKEN_EXPIRED" | "AUTH_TOKEN_INVALID" | "AUTH_TOKEN_REUSED" | "AUTH_ACCOUNT_LOCKED" | "AUTH_EMAIL_TAKEN" | "AUTH_PHONE_TAKEN" | "PERM_DENIED" | "PERM_ROLE_REQUIRED" | "FEATURE_NOT_IN_PLAN" | "FEATURE_LIMIT_REACHED" | "TENANT_ID_REQUIRED" | "TENANT_NOT_FOUND" | "TENANT_SUSPENDED" | "TENANT_READONLY" | "INVITATION_EXPIRED" | "INVITATION_ALREADY_ACCEPTED" | "VALIDATION_FAILED" | "RULE_FUND_RESTRICTION_VIOLATED" | "RULE_WAQF_CORPUS_PROTECTED" | "RULE_LEDGER_IMMUTABLE" | "RULE_LAST_ADMIN" | "SYNC_CURSOR_TOO_OLD" | "SYNC_DEPENDENCY_NOT_FOUND" | "SYNC_EPOCH_MISMATCH" | "CONFLICT_VERSION_MISMATCH" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_KEY_REQUIRED" | "NOT_FOUND" | "RATE_LIMIT_EXCEEDED" | "INTERNAL_ERROR";
+                                message: string;
+                                requestId: string;
+                                details?: unknown;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/mosques/{mosqueId}/expenses/{expenseId}/adjust": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Correct an expense with a linked adjustment entry */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    mosqueId: string;
+                    expenseId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        reason: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Success */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            fundId: string;
+                            categoryId: string;
+                            amountMinor: number;
+                            currency: string;
+                            occurredOn: string;
+                            payee: string | null;
+                            description: string | null;
+                            /** @enum {string} */
+                            method: "CASH" | "BANK" | "MOBILE_MONEY" | "CARD" | "CHEQUE" | "IN_KIND";
+                            /** @enum {string} */
+                            approvalStatus: "DRAFT" | "PENDING" | "POSTED" | "REJECTED";
+                            adjustsId: string | null;
+                            adjustmentReason: string | null;
+                            createdBy: string;
+                            createdAt: string;
+                        };
+                    };
+                };
+                /** @description Error */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error?: {
+                                /** @enum {string} */
+                                code: "AUTH_INVALID_CREDENTIALS" | "AUTH_TOKEN_EXPIRED" | "AUTH_TOKEN_INVALID" | "AUTH_TOKEN_REUSED" | "AUTH_ACCOUNT_LOCKED" | "AUTH_EMAIL_TAKEN" | "AUTH_PHONE_TAKEN" | "PERM_DENIED" | "PERM_ROLE_REQUIRED" | "FEATURE_NOT_IN_PLAN" | "FEATURE_LIMIT_REACHED" | "TENANT_ID_REQUIRED" | "TENANT_NOT_FOUND" | "TENANT_SUSPENDED" | "TENANT_READONLY" | "INVITATION_EXPIRED" | "INVITATION_ALREADY_ACCEPTED" | "VALIDATION_FAILED" | "RULE_FUND_RESTRICTION_VIOLATED" | "RULE_WAQF_CORPUS_PROTECTED" | "RULE_LEDGER_IMMUTABLE" | "RULE_LAST_ADMIN" | "SYNC_CURSOR_TOO_OLD" | "SYNC_DEPENDENCY_NOT_FOUND" | "SYNC_EPOCH_MISMATCH" | "CONFLICT_VERSION_MISMATCH" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_KEY_REQUIRED" | "NOT_FOUND" | "RATE_LIMIT_EXCEEDED" | "INTERNAL_ERROR";
+                                message: string;
+                                requestId: string;
+                                details?: unknown;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/mosques/{mosqueId}/funds": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List the mosque's funds */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    mosqueId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Success */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: string;
+                            tenantId: string;
+                            /** @enum {string} */
+                            type: "GENERAL" | "ZAKAT" | "SADAQAH" | "LILLAH" | "FITRANA" | "QURBANI" | "WAQF" | "BUILDING" | "CUSTOM";
+                            name: string;
+                            zakatEligible: boolean;
+                        }[];
+                    };
+                };
+                /** @description Error */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error?: {
+                                /** @enum {string} */
+                                code: "AUTH_INVALID_CREDENTIALS" | "AUTH_TOKEN_EXPIRED" | "AUTH_TOKEN_INVALID" | "AUTH_TOKEN_REUSED" | "AUTH_ACCOUNT_LOCKED" | "AUTH_EMAIL_TAKEN" | "AUTH_PHONE_TAKEN" | "PERM_DENIED" | "PERM_ROLE_REQUIRED" | "FEATURE_NOT_IN_PLAN" | "FEATURE_LIMIT_REACHED" | "TENANT_ID_REQUIRED" | "TENANT_NOT_FOUND" | "TENANT_SUSPENDED" | "TENANT_READONLY" | "INVITATION_EXPIRED" | "INVITATION_ALREADY_ACCEPTED" | "VALIDATION_FAILED" | "RULE_FUND_RESTRICTION_VIOLATED" | "RULE_WAQF_CORPUS_PROTECTED" | "RULE_LEDGER_IMMUTABLE" | "RULE_LAST_ADMIN" | "SYNC_CURSOR_TOO_OLD" | "SYNC_DEPENDENCY_NOT_FOUND" | "SYNC_EPOCH_MISMATCH" | "CONFLICT_VERSION_MISMATCH" | "IDEMPOTENCY_KEY_REUSED" | "IDEMPOTENCY_KEY_REQUIRED" | "NOT_FOUND" | "RATE_LIMIT_EXCEEDED" | "INTERNAL_ERROR";
+                                message: string;
+                                requestId: string;
+                                details?: unknown;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {

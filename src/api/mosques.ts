@@ -24,7 +24,9 @@ export function fetchPrayerConfig(api: ApiClient, mosqueId: string): Promise<Pra
 }
 
 export function updatePrayerConfig(
-  api: ApiClient, mosqueId: string, input: UpdatePrayerConfigRequest,
+  api: ApiClient, mosqueId: string, input: UpdatePrayerConfigRequest, idempotencyKey: string,
 ): Promise<PrayerConfigResponse> {
-  return api.put<PrayerConfigResponse>(`/mosques/${mosqueId}/prayer-config`, input, mosqueId);
+  return api.put<PrayerConfigResponse>(
+    `/mosques/${mosqueId}/prayer-config`, input, { tenantId: mosqueId, idempotencyKey },
+  );
 }

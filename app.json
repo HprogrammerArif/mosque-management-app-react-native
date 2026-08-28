@@ -6,9 +6,10 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.appsoulciety.masjidos"
     },
     "android": {
       "adaptiveIcon": {
@@ -18,7 +19,8 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.appsoulciety.masjidos"
+      "package": "com.appsoulciety.masjidos",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -26,7 +28,19 @@
     "plugins": [
       "expo-font",
       "expo-secure-store",
-      "expo-splash-screen",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#F2EDE0",
+          "dark": {
+            "image": "./assets/splash-icon.png",
+            "backgroundColor": "#141A1F"
+          }
+        }
+      ],
       "expo-router",
       "expo-sqlite"
     ]

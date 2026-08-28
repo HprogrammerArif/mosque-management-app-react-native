@@ -4,11 +4,13 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemeProvider } from '../src/theme/ThemeProvider';
+import { useSyncTriggers } from '../src/data/sync-triggers';
 import '../src/i18n';
 
 void SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  useSyncTriggers();
   const [fontsLoaded] = useFonts({
     HindSiliguri_400Regular: require('../assets/fonts/HindSiliguri-Regular.ttf'),
     HindSiliguri_600SemiBold: require('../assets/fonts/HindSiliguri-SemiBold.ttf'),

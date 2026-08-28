@@ -1,8 +1,13 @@
 import type { paths } from './contract.gen';
 import type { ApiClient } from './client';
 
+// POST routes here default to 201 (server.ts: unset docs.status + method POST -> 201);
+// GET/PUT default to 200. Try 200 first, fall back to 201 — mosques.ts's Json<> only
+// ever hit GET/PUT so 200 alone worked there; this file's POST-heavy usage needs both.
 type Json<P extends keyof paths, M extends keyof paths[P]> =
-  paths[P][M] extends { responses: { 200: { content: { 'application/json': infer T } } } } ? T : never;
+  paths[P][M] extends { responses: { 200: { content: { 'application/json': infer T } } } } ? T :
+  paths[P][M] extends { responses: { 201: { content: { 'application/json': infer T } } } } ? T :
+  never;
 type Body<P extends keyof paths, M extends keyof paths[P]> =
   paths[P][M] extends { requestBody: { content: { 'application/json': infer T } } } ? T : never;
 

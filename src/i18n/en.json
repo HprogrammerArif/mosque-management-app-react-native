@@ -29,5 +29,46 @@
   "home": {
     "noMosque": "You're not part of a mosque yet.",
     "createMosque": "Create a mosque"
+  },
+  "nav": {
+    "donations": "Donations",
+    "expenses": "Expenses",
+    "back": "Back"
+  },
+  "common": {
+    "save": "Save",
+    "amount": "Amount",
+    "date": "Date",
+    "method": "Payment method",
+    "note": "Note",
+    "methods": {
+      "CASH": "Cash",
+      "BANK": "Bank transfer",
+      "MOBILE_MONEY": "Mobile money",
+      "CARD": "Card",
+      "CHEQUE": "Cheque",
+      "IN_KIND": "In kind"
+    }
+  },
+  "donations": {
+    "title": "Donations",
+    "record": "Record donation",
+    "fund": "Fund",
+    "donorName": "Donor name (optional)",
+    "empty": "No donations recorded yet.",
+    "success": "Donation recorded"
+  },
+  "expenses": {
+    "title": "Expenses",
+    "record": "Record expense",
+    "fund": "Fund",
+    "category": "Category",
+    "payee": "Payee (optional)",
+    "description": "Description (optional)",
+    "empty": "No expenses recorded yet.",
+    "success": "Expense recorded",
+    "errors": {
+      "RULE_FUND_RESTRICTION_VIOLATED": "This fund can only pay for Zakat-eligible expense categories."
+    }
   }
 }

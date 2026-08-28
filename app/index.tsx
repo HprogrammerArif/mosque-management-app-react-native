@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { View, ScrollView } from 'react-native';
-import { Redirect } from 'expo-router';
+import { Redirect, router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useStyles } from '../src/theme/use-styles';
 import type { Theme } from '../src/theme/tokens';
 import { useSession, api } from '../src/stores/session';
+import { useMosque } from '../src/stores/mosque';
 import { PrayerRail } from '../src/components/ui/PrayerRail';
 import { PrayerTable } from '../src/components/ui/PrayerTable';
 import { EmptyState } from '../src/components/ui/EmptyState';
+import { Button } from '../src/components/ui/Button';
 import { computePrayerTimes, type DayPrayerTimes } from '../src/lib/prayer-times';
 import { listMyMosques } from '../src/api/mosques';
 import {
@@ -18,6 +20,8 @@ const indexStyles = (t: Theme) => ({
   fill: { flex: 1, backgroundColor: t.color.paper },
   scroll: { flex: 1, backgroundColor: t.color.paper },
   content: { padding: t.space[5], gap: t.space[6] },
+  nav: { flexDirection: 'row' as const, gap: t.space[3] },
+  navButton: { flex: 1 },
 });
 
 type MosqueSummary = { id: string; latitude: number; longitude: number };
@@ -50,6 +54,7 @@ export default function Index() {
   const [resolving, setResolving] = useState(true);
   const [mosque, setMosque] = useState<MosqueSummary | null>(null);
   const [times, setTimes] = useState<DayPrayerTimes | null>(null);
+  const setCurrentMosqueId = useMosque((state) => state.setCurrentMosqueId);
 
   useEffect(() => { void hydrate(); }, [hydrate]);
 
@@ -61,6 +66,7 @@ export default function Index() {
       const resolved = await resolveMosque();
       if (cancelled) return;
       setMosque(resolved);
+      setCurrentMosqueId(resolved?.id ?? null);
       setResolving(false);
       if (!resolved) return;
 
@@ -73,7 +79,7 @@ export default function Index() {
     })();
 
     return () => { cancelled = true; };
-  }, [status]);
+  }, [status, setCurrentMosqueId]);
 
   if (status === 'loading' || resolving) return <View style={s.fill} />;
   if (status === 'unauthenticated') return <Redirect href="/(auth)/sign-in" />;
@@ -88,6 +94,14 @@ export default function Index() {
     <ScrollView style={s.scroll} contentContainerStyle={s.content}>
       <PrayerRail times={times} size="hero" />
       <PrayerTable times={times} />
+      <View style={s.nav}>
+        <View style={s.navButton}>
+          <Button label={t('nav.donations')} variant="secondary" onPress={() => router.push('/donations')} />
+        </View>
+        <View style={s.navButton}>
+          <Button label={t('nav.expenses')} variant="secondary" onPress={() => router.push('/expenses')} />
+        </View>
+      </View>
     </ScrollView>
   );
 }

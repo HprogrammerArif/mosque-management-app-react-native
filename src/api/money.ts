@@ -31,6 +31,8 @@ export type PayrollRunResponse = Json<'/api/v1/mosques/{mosqueId}/payroll/runs',
 export type PayrollLineResponse =
   Json<'/api/v1/mosques/{mosqueId}/payroll/runs/{runId}/lines', 'get'> extends (infer T)[] ? T : never;
 export type CreatePayrollRunRequest = Body<'/api/v1/mosques/{mosqueId}/payroll/runs', 'post'>;
+export type CommitteeMemberResponse = Json<'/api/v1/mosques/{mosqueId}/committee', 'post'>;
+export type CreateCommitteeMemberRequest = Body<'/api/v1/mosques/{mosqueId}/committee', 'post'>;
 
 export function listFunds(api: ApiClient, mosqueId: string): Promise<FundResponse[]> {
   return api.get<FundResponse[]>(`/mosques/${mosqueId}/funds`, mosqueId);
@@ -146,4 +148,14 @@ export function postPayrollRun(
   return api.post<PayrollRunResponse>(
     `/mosques/${mosqueId}/payroll/runs/${runId}/post`, undefined, { tenantId: mosqueId, idempotencyKey },
   );
+}
+
+export function listCommitteeMembers(api: ApiClient, mosqueId: string): Promise<CommitteeMemberResponse[]> {
+  return api.get<CommitteeMemberResponse[]>(`/mosques/${mosqueId}/committee`, mosqueId);
+}
+
+export function createCommitteeMember(
+  api: ApiClient, mosqueId: string, input: CreateCommitteeMemberRequest, idempotencyKey: string,
+): Promise<CommitteeMemberResponse> {
+  return api.post<CommitteeMemberResponse>(`/mosques/${mosqueId}/committee`, input, { tenantId: mosqueId, idempotencyKey });
 }

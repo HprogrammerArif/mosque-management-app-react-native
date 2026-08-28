@@ -36,6 +36,7 @@
     "households": "Households",
     "dues": "Dues",
     "payroll": "Payroll",
+    "committee": "Committee",
     "back": "Back"
   },
   "common": {
@@ -119,5 +120,11 @@
       "DRAFT": "Draft — not yet posted",
       "POSTED": "Posted to ledger"
     }
+  },
+  "committee": {
+    "add": "Add committee member",
+    "empty": "No committee members yet.",
+    "memberName": "Member name",
+    "position": "Position (optional)"
   }
 }

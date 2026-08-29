@@ -10,8 +10,11 @@ import { useMosque } from '../../../src/stores/mosque';
 import { Button } from '../../../src/components/ui/Button';
 import { Input } from '../../../src/components/ui/Input';
 import { SelectField } from '../../../src/components/ui/SelectField';
-import { listFunds, recordDuesPayment, type FundResponse } from '../../../src/api/money';
+import { recordDuesPayment } from '../../../src/api/money';
+import { getCachedFunds } from '../../../src/data/sync-mosque';
 import { ApiError } from '../../../src/api/client';
+
+type CachedFund = { id: string; name: string };
 
 const DUES_PAYMENT_METHODS = ['CASH', 'BANK', 'MOBILE_MONEY', 'CARD', 'CHEQUE'] as const;
 
@@ -35,7 +38,7 @@ export default function RecordDuesPayment() {
   const { chargeId } = useLocalSearchParams<{ chargeId: string }>();
   const mosqueId = useMosque((state) => state.currentMosqueId);
 
-  const [funds, setFunds] = useState<FundResponse[]>([]);
+  const [funds, setFunds] = useState<CachedFund[]>([]);
   const [fundId, setFundId] = useState<string | null>(null);
   const [amount, setAmount] = useState('');
   const [paidOn, setPaidOn] = useState(todayIso());
@@ -44,15 +47,16 @@ export default function RecordDuesPayment() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (mosqueId === null) return;
-    void listFunds(api, mosqueId).then(setFunds);
-  }, [mosqueId]);
+    // Offline-first, same reasoning as donations/record.tsx — funds are cached locally,
+    // not fetched live here, so the picker still has options with no network.
+    void getCachedFunds().then(setFunds);
+  }, []);
 
   async function handleSave(): Promise<void> {
     if (mosqueId === null || fundId === null || method === null) return;
     const amountMinor = Math.round(Number(amount) * 100);
     if (!Number.isFinite(amountMinor) || amountMinor <= 0) {
-      setError('Enter a valid amount');
+      setError(t('common.errors.invalidAmount'));
       return;
     }
 
@@ -74,7 +78,7 @@ export default function RecordDuesPayment() {
       } else if (err instanceof ApiError && err.code === 'RULE_DUES_ALREADY_SETTLED') {
         setError(t('dues.errors.RULE_DUES_ALREADY_SETTLED'));
       } else {
-        setError(err instanceof ApiError ? err.message : 'Something went wrong');
+        setError(err instanceof ApiError ? err.message : t('common.errors.generic'));
       }
     } finally {
       setSaving(false);

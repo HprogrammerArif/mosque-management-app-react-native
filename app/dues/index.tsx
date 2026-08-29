@@ -44,15 +44,21 @@ export default function DuesList() {
   const [households, setHouseholds] = useState<HouseholdResponse[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [loadError, setLoadError] = useState(false);
 
   const load = useCallback(async () => {
     if (mosqueId === null) return;
-    const [chargeList, householdList] = await Promise.all([
-      listDuesChargesByPeriod(api, mosqueId, period),
-      listHouseholds(api, mosqueId),
-    ]);
-    setCharges(chargeList);
-    setHouseholds(householdList);
+    try {
+      const [chargeList, householdList] = await Promise.all([
+        listDuesChargesByPeriod(api, mosqueId, period),
+        listHouseholds(api, mosqueId),
+      ]);
+      setCharges(chargeList);
+      setHouseholds(householdList);
+      setLoadError(false);
+    } catch {
+      setLoadError(true);
+    }
   }, [mosqueId, period]);
 
   useFocusEffect(useCallback(() => { void load(); }, [load]));
@@ -77,7 +83,11 @@ export default function DuesList() {
   const householdName = (householdId: string): string =>
     households.find((h) => h.id === householdId)?.name ?? householdId;
 
-  if (charges === null) return <View style={s.fill} />;
+  if (charges === null) {
+    return loadError
+      ? <EmptyState message={t('common.errors.loadFailed')} actionLabel={t('common.retry')} onAction={load} />
+      : <View style={s.fill} />;
+  }
 
   return (
     <View style={s.fill}>

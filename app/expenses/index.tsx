@@ -31,11 +31,19 @@ export default function ExpensesList() {
   const mosqueId = useMosque((state) => state.currentMosqueId);
   const [expenses, setExpenses] = useState<ExpenseResponse[] | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [loadError, setLoadError] = useState(false);
 
   const load = useCallback(async () => {
     if (mosqueId === null) return;
-    const result = await listExpenses(api, mosqueId);
-    setExpenses(result);
+    try {
+      const result = await listExpenses(api, mosqueId);
+      setExpenses(result);
+      setLoadError(false);
+    } catch {
+      // Leave any already-loaded list on screen (a failed background refresh isn't
+      // worth blocking on); only the empty/first-load state below reacts to this.
+      setLoadError(true);
+    }
   }, [mosqueId]);
 
   // See donations/index.tsx's note — useFocusEffect alone covers mount + every return.
@@ -47,7 +55,11 @@ export default function ExpensesList() {
     setRefreshing(false);
   };
 
-  if (expenses === null) return <View style={s.fill} />;
+  if (expenses === null) {
+    return loadError
+      ? <EmptyState message={t('common.errors.loadFailed')} actionLabel={t('common.retry')} onAction={load} />
+      : <View style={s.fill} />;
+  }
 
   return (
     <View style={s.fill}>

@@ -29,15 +29,25 @@ export default function AnnouncementsList() {
   const s = useStyles(listStyles);
   const mosqueId = useMosque((state) => state.currentMosqueId);
   const [announcements, setAnnouncements] = useState<AnnouncementResponse[] | null>(null);
+  const [loadError, setLoadError] = useState(false);
 
   const load = useCallback(async () => {
     if (mosqueId === null) return;
-    setAnnouncements(await listAnnouncements(api, mosqueId));
+    try {
+      setAnnouncements(await listAnnouncements(api, mosqueId));
+      setLoadError(false);
+    } catch {
+      setLoadError(true);
+    }
   }, [mosqueId]);
 
   useFocusEffect(useCallback(() => { void load(); }, [load]));
 
-  if (announcements === null) return <View style={s.fill} />;
+  if (announcements === null) {
+    return loadError
+      ? <EmptyState message={t('common.errors.loadFailed')} actionLabel={t('common.retry')} onAction={load} />
+      : <View style={s.fill} />;
+  }
 
   return (
     <View style={s.fill}>

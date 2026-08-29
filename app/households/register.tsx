@@ -53,7 +53,7 @@ export default function RegisterHousehold() {
       router.back();
       void runSync(api, mosqueId);
     } catch {
-      setError('Could not save. Try again.');
+      setError(t('common.errors.saveFailed'));
     } finally {
       setSaving(false);
     }

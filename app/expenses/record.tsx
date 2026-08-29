@@ -10,11 +10,11 @@ import { useMosque } from '../../src/stores/mosque';
 import { Button } from '../../src/components/ui/Button';
 import { Input } from '../../src/components/ui/Input';
 import { SelectField } from '../../src/components/ui/SelectField';
-import {
-  listFunds, listExpenseCategories, recordExpense,
-  type FundResponse, type ExpenseCategoryResponse,
-} from '../../src/api/money';
+import { recordExpense } from '../../src/api/money';
+import { getCachedFunds, getCachedExpenseCategories } from '../../src/data/sync-mosque';
 import { ApiError } from '../../src/api/client';
+
+type CachedOption = { id: string; name: string };
 
 const EXPENSE_METHODS = ['CASH', 'BANK', 'MOBILE_MONEY', 'CARD', 'CHEQUE', 'IN_KIND'] as const;
 
@@ -37,8 +37,8 @@ export default function RecordExpense() {
   const s = useStyles(formStyles);
   const mosqueId = useMosque((state) => state.currentMosqueId);
 
-  const [funds, setFunds] = useState<FundResponse[]>([]);
-  const [categories, setCategories] = useState<ExpenseCategoryResponse[]>([]);
+  const [funds, setFunds] = useState<CachedOption[]>([]);
+  const [categories, setCategories] = useState<CachedOption[]>([]);
   const [fundId, setFundId] = useState<string | null>(null);
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const [amount, setAmount] = useState('');
@@ -50,16 +50,19 @@ export default function RecordExpense() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (mosqueId === null) return;
-    void listFunds(api, mosqueId).then(setFunds);
-    void listExpenseCategories(api, mosqueId).then(setCategories);
-  }, [mosqueId]);
+    // Offline-first, same reasoning as donations/record.tsx: this screen must have
+    // options to show with no network the first time it's opened in a session — funds
+    // and categories are cached locally by sync-mosque.ts, refreshed in the background
+    // at app launch, not fetched live here.
+    void getCachedFunds().then(setFunds);
+    void getCachedExpenseCategories().then(setCategories);
+  }, []);
 
   async function handleSave(): Promise<void> {
     if (mosqueId === null || fundId === null || categoryId === null || method === null) return;
     const amountMinor = Math.round(Number(amount) * 100);
     if (!Number.isFinite(amountMinor) || amountMinor <= 0) {
-      setError('Enter a valid amount');
+      setError(t('common.errors.invalidAmount'));
       return;
     }
 
@@ -85,7 +88,7 @@ export default function RecordExpense() {
       } else if (err instanceof ApiError && err.code === 'RULE_WAQF_CORPUS_PROTECTED') {
         setError(t('expenses.errors.RULE_WAQF_CORPUS_PROTECTED'));
       } else {
-        setError(err instanceof ApiError ? err.message : 'Something went wrong');
+        setError(err instanceof ApiError ? err.message : t('common.errors.generic'));
       }
     } finally {
       setSaving(false);

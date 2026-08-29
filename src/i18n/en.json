@@ -44,6 +44,7 @@
     "notifications": "Notifications",
     "syncIssues": "Sync issues",
     "language": "Language",
+    "signOut": "Sign out",
     "back": "Back"
   },
   "common": {
@@ -53,6 +54,7 @@
     "date": "Date",
     "method": "Payment method",
     "note": "Note",
+    "retry": "Retry",
     "methods": {
       "CASH": "Cash",
       "BANK": "Bank transfer",
@@ -60,6 +62,12 @@
       "CARD": "Card",
       "CHEQUE": "Cheque",
       "IN_KIND": "In kind"
+    },
+    "errors": {
+      "invalidAmount": "Enter a valid amount",
+      "saveFailed": "Could not save. Try again.",
+      "loadFailed": "Couldn't load this. Check your connection and try again.",
+      "generic": "Something went wrong"
     }
   },
   "households": {
@@ -76,6 +84,7 @@
     "record": "Record donation",
     "fund": "Fund",
     "donorName": "Donor name (optional)",
+    "anonymousDonor": "Anonymous",
     "empty": "No donations recorded yet.",
     "success": "Donation recorded"
   },

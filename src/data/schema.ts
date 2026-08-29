@@ -41,6 +41,14 @@ export const funds = sqliteTable('funds', {
   zakatEligible: integer('zakat_eligible', { mode: 'boolean' }).notNull().default(false),
 });
 
+// Same fetch-then-write caching as funds, same reason: without it, "record expense"'s
+// category picker was empty the first time the screen opened offline in a session.
+export const expenseCategories = sqliteTable('expense_categories', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  zakatEligible: integer('zakat_eligible', { mode: 'boolean' }).notNull().default(false),
+});
+
 // Households and donations carry sync metadata (offline-sync-protocol.md §4.1):
 // serverVersion/changeSeq/hlc are null until the first successful sync ("never
 // synced"); dirty/pendingOp track an in-flight local write awaiting acknowledgement.

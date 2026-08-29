@@ -13,7 +13,8 @@ import { Button } from '../src/components/ui/Button';
 import { computePrayerTimes, type DayPrayerTimes } from '../src/lib/prayer-times';
 import { listMyMosques } from '../src/api/mosques';
 import {
-  syncMosqueConfig, getAnyCachedMosque, getCachedMosque, getCachedPrayerConfig, syncFunds,
+  syncMosqueConfig, getAnyCachedMosque, getCachedMosque, getCachedPrayerConfig,
+  syncFunds, syncExpenseCategories,
 } from '../src/data/sync-mosque';
 import { bootstrapIfNeeded } from '../src/data/sync-engine';
 
@@ -21,8 +22,14 @@ const indexStyles = (t: Theme) => ({
   fill: { flex: 1, backgroundColor: t.color.paper },
   scroll: { flex: 1, backgroundColor: t.color.paper },
   content: { padding: t.space[5], gap: t.space[6] },
-  nav: { flexDirection: 'row' as const, gap: t.space[3] },
-  navButton: { flex: 1 },
+  nav: {
+    flexDirection: 'row' as const, flexWrap: 'wrap' as const,
+    columnGap: t.space[3], rowGap: t.space[3],
+  },
+  // Fixed two-column width, not `flex: 1` — with `flexWrap`, a `flex` child stretches to
+  // fill whatever is left on its own wrapped row (a lone last button on an odd count would
+  // span the full width) instead of lining up in a stable grid.
+  navButton: { width: '48%' as const },
 });
 
 type MosqueSummary = { id: string; latitude: number; longitude: number };
@@ -41,7 +48,9 @@ async function resolveMosque(): Promise<MosqueSummary | null> {
   const first = mine[0];
   if (!first) return null;
 
-  await Promise.all([syncMosqueConfig(api, first.id), syncFunds(api, first.id)]);
+  await Promise.all([
+    syncMosqueConfig(api, first.id), syncFunds(api, first.id), syncExpenseCategories(api, first.id),
+  ]);
   const synced = await getCachedMosque(first.id);
   return synced;
 }
@@ -51,6 +60,7 @@ export default function Index() {
   const s = useStyles(indexStyles);
   const status = useSession((state) => state.status);
   const hydrate = useSession((state) => state.hydrate);
+  const signOut = useSession((state) => state.signOut);
 
   const [resolving, setResolving] = useState(true);
   const [mosque, setMosque] = useState<MosqueSummary | null>(null);
@@ -78,6 +88,7 @@ export default function Index() {
       // Refresh in the background — the screen already has something to show.
       void syncMosqueConfig(api, resolved.id);
       void syncFunds(api, resolved.id);
+      void syncExpenseCategories(api, resolved.id);
       // One-time seed of the sync engine's local tables (households/donations) — a
       // no-op after the first successful call (bootstrapIfNeeded checks sync_state).
       void bootstrapIfNeeded(api, resolved.id);
@@ -138,6 +149,9 @@ export default function Index() {
         </View>
         <View style={s.navButton}>
           <Button label={t('nav.language')} variant="secondary" onPress={() => router.push('/settings/language')} />
+        </View>
+        <View style={s.navButton}>
+          <Button label={t('nav.signOut')} variant="secondary" onPress={() => void signOut()} />
         </View>
       </View>
     </ScrollView>

@@ -9,6 +9,7 @@ import { api } from '../../src/stores/session';
 import { useMosque } from '../../src/stores/mosque';
 import { Button } from '../../src/components/ui/Button';
 import { Input } from '../../src/components/ui/Input';
+import { EmptyState } from '../../src/components/ui/EmptyState';
 import { ApiError } from '../../src/api/client';
 import {
   getDuesCharge, listDuesPayments, waiveDuesCharge,
@@ -54,15 +55,21 @@ export default function DuesChargeDetail() {
   const [waiveReason, setWaiveReason] = useState('');
   const [waiving, setWaiving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState(false);
 
   const load = useCallback(async () => {
     if (mosqueId === null) return;
-    const [chargeResult, paymentsResult] = await Promise.all([
-      getDuesCharge(api, mosqueId, chargeId),
-      listDuesPayments(api, mosqueId, chargeId),
-    ]);
-    setCharge(chargeResult);
-    setPayments(paymentsResult);
+    try {
+      const [chargeResult, paymentsResult] = await Promise.all([
+        getDuesCharge(api, mosqueId, chargeId),
+        listDuesPayments(api, mosqueId, chargeId),
+      ]);
+      setCharge(chargeResult);
+      setPayments(paymentsResult);
+      setLoadError(false);
+    } catch {
+      setLoadError(true);
+    }
   }, [mosqueId, chargeId]);
 
   useFocusEffect(useCallback(() => { void load(); }, [load]));
@@ -76,13 +83,17 @@ export default function DuesChargeDetail() {
       await load();
       setWaiveReason('');
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Something went wrong');
+      setError(err instanceof ApiError ? err.message : t('common.errors.generic'));
     } finally {
       setWaiving(false);
     }
   };
 
-  if (charge === null) return <View style={s.fill} />;
+  if (charge === null) {
+    return loadError
+      ? <EmptyState message={t('common.errors.loadFailed')} actionLabel={t('common.retry')} onAction={load} />
+      : <View style={s.fill} />;
+  }
 
   const remainingMinor = charge.amountMinor - charge.paidMinor;
   const settled = SETTLED_STATUSES.has(charge.status);

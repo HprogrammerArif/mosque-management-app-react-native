@@ -36,15 +36,25 @@ export default function EventsList() {
   const s = useStyles(listStyles);
   const mosqueId = useMosque((state) => state.currentMosqueId);
   const [events, setEvents] = useState<EventResponse[] | null>(null);
+  const [loadError, setLoadError] = useState(false);
 
   const load = useCallback(async () => {
     if (mosqueId === null) return;
-    setEvents(await listUpcomingEvents(api, mosqueId));
+    try {
+      setEvents(await listUpcomingEvents(api, mosqueId));
+      setLoadError(false);
+    } catch {
+      setLoadError(true);
+    }
   }, [mosqueId]);
 
   useFocusEffect(useCallback(() => { void load(); }, [load]));
 
-  if (events === null) return <View style={s.fill} />;
+  if (events === null) {
+    return loadError
+      ? <EmptyState message={t('common.errors.loadFailed')} actionLabel={t('common.retry')} onAction={load} />
+      : <View style={s.fill} />;
+  }
 
   return (
     <View style={s.fill}>

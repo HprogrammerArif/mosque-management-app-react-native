@@ -85,7 +85,7 @@ export default function DonationsList() {
           renderItem={({ item }) => (
             <View style={s.row}>
               <View style={s.rowLeft}>
-                <Text style={s.donor}>{item.anonymous ? 'Anonymous' : item.donorName ?? '—'}</Text>
+                <Text style={s.donor}>{item.anonymous ? t('donations.anonymousDonor') : item.donorName ?? '—'}</Text>
                 <Text style={[s.date, item.dirty && s.pending]}>
                   {item.occurredOn}{item.dirty ? ` · ${t('common.pending')}` : ''}
                 </Text>

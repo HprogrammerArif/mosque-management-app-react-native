@@ -1,8 +1,8 @@
 import { eq } from 'drizzle-orm';
 import { openDb } from './db';
-import { mosques, prayerConfig, funds } from './schema';
+import { mosques, prayerConfig, funds, expenseCategories } from './schema';
 import { fetchMosque, fetchPrayerConfig } from '../api/mosques';
-import { listFunds } from '../api/money';
+import { listFunds, listExpenseCategories } from '../api/money';
 import type { ApiClient } from '../api/client';
 
 /**
@@ -84,6 +84,26 @@ export async function syncFunds(api: ApiClient, mosqueId: string): Promise<void>
 export async function getCachedFunds() {
   const db = await openDb();
   return db.select().from(funds);
+}
+
+/** Same shape as syncFunds/getCachedFunds — expense categories are equally platform-managed. */
+export async function syncExpenseCategories(api: ApiClient, mosqueId: string): Promise<void> {
+  const rows = await listExpenseCategories(api, mosqueId);
+  const db = await openDb();
+
+  for (const category of rows) {
+    await db.insert(expenseCategories).values({
+      id: category.id, name: category.name, zakatEligible: category.zakatEligible,
+    }).onConflictDoUpdate({
+      target: expenseCategories.id,
+      set: { name: category.name, zakatEligible: category.zakatEligible },
+    });
+  }
+}
+
+export async function getCachedExpenseCategories() {
+  const db = await openDb();
+  return db.select().from(expenseCategories);
 }
 
 export async function getCachedMosque(mosqueId: string) {

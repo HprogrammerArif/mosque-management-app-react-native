@@ -56,12 +56,18 @@ export default function PayrollRunScreen() {
   const [fundId, setFundId] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
   const [posting, setPosting] = useState(false);
+  const [loadError, setLoadError] = useState(false);
 
   const load = useCallback(async () => {
     if (mosqueId === null) return;
-    const [staffList, fundList] = await Promise.all([listStaff(api, mosqueId), listFunds(api, mosqueId)]);
-    setStaff(staffList);
-    setFunds(fundList);
+    try {
+      const [staffList, fundList] = await Promise.all([listStaff(api, mosqueId), listFunds(api, mosqueId)]);
+      setStaff(staffList);
+      setFunds(fundList);
+      setLoadError(false);
+    } catch {
+      setLoadError(true);
+    }
   }, [mosqueId]);
 
   useFocusEffect(useCallback(() => { void load(); }, [load]));
@@ -91,6 +97,10 @@ export default function PayrollRunScreen() {
   };
 
   const staffName = (staffId: string): string => staff.find((m) => m.id === staffId)?.name ?? staffId;
+
+  if (loadError && staff.length === 0 && funds.length === 0) {
+    return <EmptyState message={t('common.errors.loadFailed')} actionLabel={t('common.retry')} onAction={load} />;
+  }
 
   return (
     <View style={s.fill}>

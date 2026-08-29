@@ -47,7 +47,7 @@ export default function AddCommitteeMember() {
       }, Crypto.randomUUID());
       router.back();
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Something went wrong');
+      setError(err instanceof ApiError ? err.message : t('common.errors.generic'));
     } finally {
       setSaving(false);
     }

@@ -26,15 +26,25 @@ export default function CommitteeList() {
   const s = useStyles(listStyles);
   const mosqueId = useMosque((state) => state.currentMosqueId);
   const [members, setMembers] = useState<CommitteeMemberResponse[] | null>(null);
+  const [loadError, setLoadError] = useState(false);
 
   const load = useCallback(async () => {
     if (mosqueId === null) return;
-    setMembers(await listCommitteeMembers(api, mosqueId));
+    try {
+      setMembers(await listCommitteeMembers(api, mosqueId));
+      setLoadError(false);
+    } catch {
+      setLoadError(true);
+    }
   }, [mosqueId]);
 
   useFocusEffect(useCallback(() => { void load(); }, [load]));
 
-  if (members === null) return <View style={s.fill} />;
+  if (members === null) {
+    return loadError
+      ? <EmptyState message={t('common.errors.loadFailed')} actionLabel={t('common.retry')} onAction={load} />
+      : <View style={s.fill} />;
+  }
 
   return (
     <View style={s.fill}>

@@ -46,7 +46,7 @@ export default function AddAnnouncement() {
       await createAnnouncement(api, mosqueId, { title: title.trim(), body: body.trim(), urgent }, Crypto.randomUUID());
       router.back();
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Something went wrong');
+      setError(err instanceof ApiError ? err.message : t('common.errors.generic'));
     } finally {
       setSaving(false);
     }

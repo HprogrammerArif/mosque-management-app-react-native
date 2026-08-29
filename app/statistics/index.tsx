@@ -6,6 +6,7 @@ import { useStyles } from '../../src/theme/use-styles';
 import type { Theme } from '../../src/theme/tokens';
 import { api } from '../../src/stores/session';
 import { useMosque } from '../../src/stores/mosque';
+import { EmptyState } from '../../src/components/ui/EmptyState';
 import {
   getIncomeExpenditure, listFundBalanceStats, listDonationTrends,
   type IncomeExpenditureResponse, type FundBalanceStatResponse, type DonationTrendResponse,
@@ -46,23 +47,33 @@ export default function StatisticsScreen() {
   const [summary, setSummary] = useState<IncomeExpenditureResponse | null>(null);
   const [balances, setBalances] = useState<FundBalanceStatResponse[]>([]);
   const [trends, setTrends] = useState<DonationTrendResponse[]>([]);
+  const [loadError, setLoadError] = useState(false);
 
   const load = useCallback(async () => {
     if (mosqueId === null) return;
     const { from, to } = currentMonthRange();
-    const [summaryResult, balancesResult, trendsResult] = await Promise.all([
-      getIncomeExpenditure(api, mosqueId, from, to),
-      listFundBalanceStats(api, mosqueId),
-      listDonationTrends(api, mosqueId, 6),
-    ]);
-    setSummary(summaryResult);
-    setBalances(balancesResult);
-    setTrends(trendsResult);
+    try {
+      const [summaryResult, balancesResult, trendsResult] = await Promise.all([
+        getIncomeExpenditure(api, mosqueId, from, to),
+        listFundBalanceStats(api, mosqueId),
+        listDonationTrends(api, mosqueId, 6),
+      ]);
+      setSummary(summaryResult);
+      setBalances(balancesResult);
+      setTrends(trendsResult);
+      setLoadError(false);
+    } catch {
+      setLoadError(true);
+    }
   }, [mosqueId]);
 
   useFocusEffect(useCallback(() => { void load(); }, [load]));
 
-  if (summary === null) return <View style={s.fill} />;
+  if (summary === null) {
+    return loadError
+      ? <EmptyState message={t('common.errors.loadFailed')} actionLabel={t('common.retry')} onAction={load} />
+      : <View style={s.fill} />;
+  }
 
   const maxTrend = Math.max(1, ...trends.map((point) => Math.abs(point.totalMinor)));
 

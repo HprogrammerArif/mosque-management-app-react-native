@@ -58,7 +58,7 @@ export default function RecordDonation() {
     if (mosqueId === null || fundId === null || method === null) return;
     const amountMinor = Math.round(Number(amount) * 100);
     if (!Number.isFinite(amountMinor) || amountMinor <= 0) {
-      setError('Enter a valid amount');
+      setError(t('common.errors.invalidAmount'));
       return;
     }
 
@@ -85,7 +85,7 @@ export default function RecordDonation() {
       router.back();
       void runSync(api, mosqueId);
     } catch {
-      setError('Could not save. Try again.');
+      setError(t('common.errors.saveFailed'));
     } finally {
       setSaving(false);
     }

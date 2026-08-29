@@ -10,8 +10,9 @@ import { restoreStoredLanguage } from '../src/i18n';
 void SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  console.log('[RootLayout] render start');
   useSyncTriggers();
-  const [fontsLoaded] = useFonts({
+  const [fontsLoaded, fontError] = useFonts({
     HindSiliguri_400Regular: require('../assets/fonts/HindSiliguri-Regular.ttf'),
     HindSiliguri_600SemiBold: require('../assets/fonts/HindSiliguri-SemiBold.ttf'),
     IBMPlexSansCondensed_600SemiBold: require('../assets/fonts/IBMPlexSansCondensed-SemiBold.ttf'),
@@ -19,13 +20,24 @@ export default function RootLayout() {
   });
   const [languageReady, setLanguageReady] = useState(false);
 
-  useEffect(() => { void restoreStoredLanguage().then(() => setLanguageReady(true)); }, []);
+  console.log('[RootLayout] fontsLoaded:', fontsLoaded, 'fontError:', fontError, 'languageReady:', languageReady);
 
   useEffect(() => {
+    console.log('[RootLayout] restoreStoredLanguage starting');
+    void restoreStoredLanguage()
+      .then(() => { console.log('[RootLayout] restoreStoredLanguage done'); setLanguageReady(true); })
+      .catch((err) => console.error('[RootLayout] restoreStoredLanguage error:', err));
+  }, []);
+
+  useEffect(() => {
+    console.log('[RootLayout] hide check — fontsLoaded:', fontsLoaded, 'languageReady:', languageReady);
     if (fontsLoaded && languageReady) void SplashScreen.hideAsync();
   }, [fontsLoaded, languageReady]);
 
-  if (!fontsLoaded || !languageReady) return null;
+  if (!fontsLoaded || !languageReady) {
+    console.log('[RootLayout] returning null — waiting for:', !fontsLoaded ? 'fonts' : '', !languageReady ? 'language' : '');
+    return null;
+  }
 
   return (
     <SafeAreaProvider>

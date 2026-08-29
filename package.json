@@ -45,6 +45,7 @@
     "@testing-library/react-native": "^13.3.3",
     "@types/jest": "^29.5.14",
     "@types/react": "~19.2.2",
+    "babel-plugin-inline-import": "^3.0.0",
     "drizzle-kit": "^0.31.10",
     "eslint": "^9.39.5",
     "eslint-config-expo": "^57.0.2",
@@ -57,7 +58,10 @@
     "onlyBuiltDependencies": [
       "unrs-resolver",
       "esbuild"
-    ]
+    ],
+    "patchedDependencies": {
+      "expo-modules-core@57.0.14": "patches/expo-modules-core@57.0.14.patch"
+    }
   },
   "jest": {
     "preset": "jest-expo"

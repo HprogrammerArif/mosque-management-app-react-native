@@ -97,8 +97,9 @@ export default function Index() {
     return () => { cancelled = true; };
   }, [status, setCurrentMosqueId]);
 
-  if (status === 'loading' || resolving) return <View style={s.fill} />;
+  if (status === 'loading') return <View style={s.fill} />;
   if (status === 'unauthenticated') return <Redirect href="/(auth)/sign-in" />;
+  if (resolving) return <View style={s.fill} />;
 
   if (!mosque) {
     return (

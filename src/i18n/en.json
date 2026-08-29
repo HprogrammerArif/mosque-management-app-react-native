@@ -1,12 +1,20 @@
 {
   "auth": {
     "signIn": "Sign in",
+    "signUp": "Create account",
     "identifier": "Phone number or email",
     "identifierHint": "Use the number your mosque has on file",
     "password": "Password",
+    "displayName": "Your name",
+    "confirmPassword": "Confirm password",
+    "noAccount": "Don't have an account? Create one",
+    "haveAccount": "Already have an account? Sign in",
+    "passwordMismatch": "Passwords don't match",
     "errors": {
       "AUTH_INVALID_CREDENTIALS": "Phone, email or password is incorrect",
       "AUTH_ACCOUNT_LOCKED": "Too many attempts. Try again shortly.",
+      "AUTH_PHONE_TAKEN": "That phone number is already registered",
+      "AUTH_EMAIL_TAKEN": "That email address is already registered",
       "NETWORK_UNAVAILABLE": "Cannot reach the server. Check your connection and try again.",
       "INTERNAL_ERROR": "Something went wrong. Try again."
     }
@@ -28,7 +36,45 @@
   },
   "home": {
     "noMosque": "You're not part of a mosque yet.",
-    "createMosque": "Create a mosque"
+    "createMosque": "Create a mosque",
+    "joinMosque": "I have an invitation"
+  },
+  "mosques": {
+    "createTitle": "Create a mosque",
+    "name": "Mosque name",
+    "timezone": "Timezone",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "locationHint": "Used to calculate accurate prayer times — the default is Dhaka",
+    "create": "Create mosque"
+  },
+  "invitations": {
+    "title": "Join a mosque",
+    "tokenLabel": "Invitation code",
+    "tokenHint": "Paste the code your mosque admin shared with you",
+    "accept": "Join",
+    "errors": {
+      "NOT_FOUND": "That invitation code wasn't found. Check it and try again.",
+      "INVITATION_ALREADY_ACCEPTED": "This invitation has already been used.",
+      "INVITATION_EXPIRED": "This invitation has expired — ask your mosque admin for a new one."
+    }
+  },
+  "members": {
+    "title": "Members",
+    "invite": "Invite a member",
+    "emailOrPhone": "Phone number or email",
+    "role": "Role",
+    "send": "Send invitation",
+    "tokenIssued": "Invitation created — share this code with them:",
+    "expiresNote": "Expires {{date}}",
+    "empty": "No members yet.",
+    "roles": {
+      "ADMIN": "Admin",
+      "TREASURER": "Treasurer",
+      "COMMITTEE": "Committee",
+      "STAFF": "Staff",
+      "MEMBER": "Member"
+    }
   },
   "nav": {
     "donations": "Donations",
@@ -43,6 +89,7 @@
     "plan": "Plan",
     "notifications": "Notifications",
     "syncIssues": "Sync issues",
+    "members": "Members",
     "language": "Language",
     "signOut": "Sign out",
     "back": "Back"

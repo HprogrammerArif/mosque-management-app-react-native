@@ -410,7 +410,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Current user */
+        /** Current user and memberships */
         get: {
             parameters: {
                 query?: never;
@@ -425,7 +425,31 @@ export interface paths {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": {
+                            user: {
+                                id: string;
+                                displayName: string;
+                                locale: string;
+                                phone: string | null;
+                                email: string | null;
+                            };
+                            memberships: {
+                                mosqueId: string;
+                                mosqueName: string;
+                                role: string;
+                                plan: string | null;
+                                entitlements: {
+                                    features: string[];
+                                    limits: {
+                                        adminUsers: number | null;
+                                        members: number | null;
+                                        historyMonths: number | null;
+                                    };
+                                };
+                            }[];
+                        };
+                    };
                 };
                 /** @description Error */
                 default: {
@@ -4470,10 +4494,16 @@ export interface paths {
                                 receiptNo?: string | null;
                                 /** @default null */
                                 note?: string | null;
-                                /** @default null */
-                                adjustsId?: string | null;
-                                /** @default null */
-                                adjustmentReason?: string | null;
+                                /**
+                                 * @default null
+                                 * @enum {unknown|null}
+                                 */
+                                adjustsId?: "null" | null;
+                                /**
+                                 * @default null
+                                 * @enum {unknown|null}
+                                 */
+                                adjustmentReason?: "null" | null;
                             } | {
                                 name: string;
                                 /** @default null */

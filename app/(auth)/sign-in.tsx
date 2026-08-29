@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, KeyboardAvoidingView, Platform, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { router } from 'expo-router';
@@ -32,6 +32,8 @@ const screenStyles = (t: Theme) => ({
     padding: t.space[3],
   },
   errorText: { ...t.type.body, fontFamily: t.font.text, color: t.color.brick },
+  switchLink: { marginTop: t.space[5], minHeight: 44, justifyContent: 'center' as const },
+  switchText: { ...t.type.body, fontFamily: t.font.text, color: t.color.verdigris, textAlign: 'center' as const },
 });
 
 export default function SignIn() {
@@ -95,6 +97,14 @@ export default function SignIn() {
         )}
 
         <Button label={t('auth.signIn')} onPress={handleSubmit} loading={loading} />
+
+        <Pressable
+          style={s.switchLink}
+          onPress={() => router.replace('/(auth)/sign-up')}
+          accessibilityRole="button"
+        >
+          <Text style={s.switchText}>{t('auth.noAccount')}</Text>
+        </Pressable>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

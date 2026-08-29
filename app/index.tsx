@@ -101,7 +101,23 @@ export default function Index() {
   if (status === 'unauthenticated') return <Redirect href="/(auth)/sign-in" />;
 
   if (!mosque) {
-    return <EmptyState message={t('home.noMosque')} />;
+    return (
+      <View style={s.fill}>
+        <EmptyState
+          message={t('home.noMosque')}
+          actionLabel={t('home.createMosque')}
+          onAction={() => router.push('/mosques/create')}
+        />
+        <View style={s.content}>
+          <Button
+            label={t('home.joinMosque')}
+            variant="secondary"
+            onPress={() => router.push('/invitations/accept')}
+          />
+          <Button label={t('nav.signOut')} variant="ghost" onPress={() => void signOut()} />
+        </View>
+      </View>
+    );
   }
 
   if (!times) return <View style={s.fill} />;
@@ -146,6 +162,9 @@ export default function Index() {
         </View>
         <View style={s.navButton}>
           <Button label={t('nav.syncIssues')} variant="secondary" onPress={() => router.push('/sync-issues')} />
+        </View>
+        <View style={s.navButton}>
+          <Button label={t('nav.members')} variant="secondary" onPress={() => router.push('/settings/members')} />
         </View>
         <View style={s.navButton}>
           <Button label={t('nav.language')} variant="secondary" onPress={() => router.push('/settings/language')} />

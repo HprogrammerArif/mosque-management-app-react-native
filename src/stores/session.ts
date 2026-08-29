@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import * as SecureStore from 'expo-secure-store';
 import { ApiClient } from '../api/client';
+import { fetchMe } from '../api/auth';
 import { applyAccountLocaleIfUnset } from '../i18n';
 
 const TOKENS_KEY = 'tokens';
@@ -29,6 +30,10 @@ type SessionState = {
   hydrate: () => Promise<void>;
   signIn: (response: AuthResponse) => Promise<void>;
   signOut: () => Promise<void>;
+  /** Re-syncs memberships from GET /auth/me after an action that changes them (creating
+   * a mosque, accepting an invitation) — see hasFeature's doc comment on why this was a
+   * gap. Requires network; the caller already just made a live mutation, so it's on. */
+  refreshMemberships: () => Promise<void>;
 };
 
 /**
@@ -82,6 +87,12 @@ export const useSession = create<SessionState>((set) => ({
     await SecureStore.deleteItemAsync(USER_KEY);
     await SecureStore.deleteItemAsync(MEMBERSHIPS_KEY);
     set({ user: null, memberships: [], status: 'unauthenticated' });
+  },
+
+  refreshMemberships: async () => {
+    const me = await fetchMe(api);
+    await SecureStore.setItemAsync(MEMBERSHIPS_KEY, JSON.stringify(me.memberships));
+    set({ memberships: me.memberships });
   },
 }));
 

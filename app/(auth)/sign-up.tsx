@@ -80,8 +80,12 @@ export default function SignUp() {
     }
   }
 
-  const identifierValid = identifier.includes('@') ? identifier.includes('.') : looksLikePhone(identifier.trim());
-  const canSubmit = displayName.trim() !== '' && identifierValid && password.length >= 8 && confirmPassword !== '';
+  const trimmedIdentifier = identifier.trim();
+  const isEmail = trimmedIdentifier.includes('@');
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const identifierValid = isEmail ? emailRegex.test(trimmedIdentifier) : looksLikePhone(trimmedIdentifier);
+  const passwordsMatch = password === confirmPassword;
+  const canSubmit = displayName.trim() !== '' && identifierValid && password.length >= 8 && passwordsMatch;
 
   return (
     <SafeAreaView style={s.safe}>
@@ -95,24 +99,34 @@ export default function SignUp() {
 
           <Input
             label={t('auth.displayName')}
+            placeholder="e.g. Abdullah Ahmed"
             value={displayName}
             onChangeText={setDisplayName}
             autoFocus
           />
           <Input
             label={t('auth.identifier')}
+            placeholder="email@example.com or +8801712345678"
+            hint={!isEmail && trimmedIdentifier.length > 0 && !trimmedIdentifier.startsWith('+')
+              ? 'Include country code (e.g. +88017...)'
+              : t('auth.identifierHint')}
+            error={trimmedIdentifier.length > 0 && !identifierValid ? 'Please enter a valid email or phone with country code (+)' : undefined}
             value={identifier}
             onChangeText={setIdentifier}
             keyboardType="email-address"
           />
           <Input
             label={t('auth.password')}
+            placeholder="At least 8 characters"
+            hint={password.length > 0 && password.length < 8 ? 'Password must be at least 8 characters' : undefined}
             value={password}
             onChangeText={setPassword}
             secureTextEntry
           />
           <Input
             label={t('auth.confirmPassword')}
+            placeholder="Re-type password"
+            error={confirmPassword.length > 0 && !passwordsMatch ? t('auth.passwordMismatch') : undefined}
             value={confirmPassword}
             onChangeText={setConfirmPassword}
             secureTextEntry

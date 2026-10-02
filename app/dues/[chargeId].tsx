@@ -104,7 +104,7 @@ export default function DuesChargeDetail() {
         <Text style={s.period}>{charge.period}</Text>
         <Text style={s.status}>{t(`dues.statuses.${charge.status}`)}</Text>
         <Text style={s.amount}>
-          {formatMoney(money(remainingMinor, charge.currency as Currency), 'en-IN')} {t('dues.remaining')}
+          {formatMoney(money(remainingMinor, charge.currency as Currency))} {t('dues.remaining')}
         </Text>
       </View>
 
@@ -124,7 +124,7 @@ export default function DuesChargeDetail() {
             <View key={payment.id} style={s.paymentRow}>
               <Text style={s.paymentDate}>{payment.paidOn} · {t(`common.methods.${payment.method}`)}</Text>
               <Text style={s.paymentAmount}>
-                {formatMoney(money(payment.amountMinor, payment.currency as Currency), 'en-IN')}
+                {formatMoney(money(payment.amountMinor, payment.currency as Currency))}
               </Text>
             </View>
           ))

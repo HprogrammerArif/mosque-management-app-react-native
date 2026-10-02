@@ -3,6 +3,7 @@ import * as SecureStore from 'expo-secure-store';
 import { ApiClient } from '../api/client';
 import { fetchMe } from '../api/auth';
 import { applyAccountLocaleIfUnset } from '../i18n';
+import { getDeviceId } from '../lib/device';
 
 const TOKENS_KEY = 'tokens';
 const USER_KEY = 'user';
@@ -101,6 +102,46 @@ async function currentAccessToken(): Promise<string | null> {
   return raw === null ? null : (JSON.parse(raw) as Tokens).accessToken;
 }
 
+let ongoingRefresh: Promise<string | null> | null = null;
+
+async function attemptTokenRefresh(): Promise<string | null> {
+  if (ongoingRefresh !== null) return ongoingRefresh;
+
+  ongoingRefresh = (async () => {
+    try {
+      const raw = await SecureStore.getItemAsync(TOKENS_KEY);
+      if (raw === null) return null;
+      const tokens = JSON.parse(raw) as Tokens;
+      if (!tokens.refreshToken) return null;
+
+      const deviceId = await getDeviceId();
+      const baseUrl = process.env['EXPO_PUBLIC_API_URL'] ?? 'http://10.0.2.2:3000';
+
+      const response = await fetch(`${baseUrl}/api/v1/auth/refresh`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refreshToken: tokens.refreshToken, deviceId }),
+      });
+
+      if (!response.ok) return null;
+
+      const data = await response.json() as { accessToken: string; refreshToken: string; expiresIn: number };
+      const updatedTokens: Tokens = {
+        accessToken: data.accessToken,
+        refreshToken: data.refreshToken,
+      };
+      await SecureStore.setItemAsync(TOKENS_KEY, JSON.stringify(updatedTokens));
+      return data.accessToken;
+    } catch {
+      return null;
+    } finally {
+      ongoingRefresh = null;
+    }
+  })();
+
+  return ongoingRefresh;
+}
+
 export const api = new ApiClient(
   process.env['EXPO_PUBLIC_API_URL'] ?? 'http://10.0.2.2:3000',
   currentAccessToken,
@@ -109,4 +150,5 @@ export const api = new ApiClient(
     // automatically clear the invalid session and transition to sign-in screen
     void useSession.getState().signOut();
   },
+  attemptTokenRefresh,
 );

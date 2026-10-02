@@ -82,7 +82,7 @@ export default function ExpensesList() {
                 <Text style={s.date}>{item.occurredOn}</Text>
               </View>
               <Text style={s.amount}>
-                {formatMoney(money(item.amountMinor, item.currency as Currency), 'en-IN')}
+                {formatMoney(money(item.amountMinor, item.currency as Currency))}
               </Text>
             </View>
           )}

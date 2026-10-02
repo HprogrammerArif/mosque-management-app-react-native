@@ -9,6 +9,7 @@ import { api } from '../../src/stores/session';
 import { useMosque } from '../../src/stores/mosque';
 import { Button } from '../../src/components/ui/Button';
 import { EmptyState } from '../../src/components/ui/EmptyState';
+import { BottomNav } from '../../src/components/ui/BottomNav';
 import { openDb } from '../../src/data/db';
 import { donations as donationsTable } from '../../src/data/schema';
 import { runSync } from '../../src/data/sync-engine';
@@ -91,12 +92,13 @@ export default function DonationsList() {
                 </Text>
               </View>
               <Text style={s.amount}>
-                {formatMoney(money(item.amountMinor, item.currency as Currency), 'en-IN')}
+                {formatMoney(money(item.amountMinor, item.currency as Currency))}
               </Text>
             </View>
           )}
         />
       )}
+      <BottomNav />
     </View>
   );
 }

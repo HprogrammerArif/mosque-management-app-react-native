@@ -60,7 +60,7 @@ export default function StaffList() {
                 {item.roleTitle !== null && <Text style={s.role}>{item.roleTitle}</Text>}
               </View>
               <Text style={s.amount}>
-                {formatMoney(money(item.monthlySalaryMinor, item.currency as Currency), 'en-IN')}
+                {formatMoney(money(item.monthlySalaryMinor, item.currency as Currency))}
               </Text>
             </View>
           )}

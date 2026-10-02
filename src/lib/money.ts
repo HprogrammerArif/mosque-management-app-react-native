@@ -7,6 +7,8 @@
  * If you change this file, change the other one and both test suites.
  */
 
+import i18n from '../i18n';
+
 export type Currency = 'BDT' | 'USD' | 'GBP' | 'EUR';
 
 export type Money = {
@@ -58,7 +60,15 @@ export function sumMoney(items: readonly Money[], currency: Currency): Money {
   return money(total, currency);
 }
 
-export function formatMoney(m: Money, locale: string): string {
+function getDefaultLocale(): string {
+  try {
+    return i18n.language === 'bn' ? 'bn-BD' : 'en-US';
+  } catch {
+    return 'en-US';
+  }
+}
+
+export function formatMoney(m: Money, locale: string = getDefaultLocale()): string {
   // The only division in the money path, at the display boundary, after all
   // arithmetic is complete. Nothing downstream consumes this result numerically.
   const major = m.amountMinor / 10 ** MINOR_EXPONENT[m.currency];

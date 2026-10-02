@@ -1,5 +1,6 @@
 import { Pressable, Text, ActivityIndicator, View } from 'react-native';
 import { useStyles } from '../../theme/use-styles';
+import { useTheme } from '../../theme/ThemeProvider';
 import type { Theme } from '../../theme/tokens';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'destructive';
@@ -54,8 +55,9 @@ export function Button({
   label, onPress, variant = 'primary', size = 'md', disabled, loading,
 }: ButtonProps) {
   const s = useStyles(buttonStyles);
+  const theme = useTheme();
   const inactive = disabled === true || loading === true;
-  const spinnerColour = variant === 'secondary' || variant === 'ghost' ? '#3F6F66' : '#F2EDE0';
+  const spinnerColour = variant === 'secondary' || variant === 'ghost' ? theme.color.verdigris : theme.color.paper;
 
   return (
     <Pressable

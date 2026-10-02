@@ -9,8 +9,7 @@ import { useStyles } from '../../src/theme/use-styles';
 import type { Theme } from '../../src/theme/tokens';
 import { api, useSession, type AuthResponse } from '../../src/stores/session';
 import { ApiError } from '../../src/api/client';
-
-const DEVICE_ID = 'bootstrap';   // a persisted per-install device id arrives in Plan 2
+import { getDeviceId } from '../../src/lib/device';
 
 const screenStyles = (t: Theme) => ({
   safe: { flex: 1, backgroundColor: t.color.paper },
@@ -50,10 +49,11 @@ export default function SignIn() {
     setFormError(null);
     setLoading(true);
     try {
+      const deviceId = await getDeviceId();
       const response = await api.post<AuthResponse>('/auth/login', {
         identifier,
         password,
-        device: { id: DEVICE_ID, platform: Platform.OS === 'ios' ? 'IOS' : 'ANDROID' },
+        device: { id: deviceId, platform: Platform.OS === 'ios' ? 'IOS' : 'ANDROID' },
       });
       await signIn(response);
       router.replace('/');

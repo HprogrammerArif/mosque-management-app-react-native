@@ -1,12 +1,14 @@
 import { useCallback, useState } from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, ActivityIndicator } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useStyles } from '../../src/theme/use-styles';
+import { useTheme } from '../../src/theme/ThemeProvider';
 import type { Theme } from '../../src/theme/tokens';
 import { api } from '../../src/stores/session';
 import { useMosque } from '../../src/stores/mosque';
 import { EmptyState } from '../../src/components/ui/EmptyState';
+import { BottomNav } from '../../src/components/ui/BottomNav';
 import {
   getIncomeExpenditure, listFundBalanceStats, listDonationTrends,
   type IncomeExpenditureResponse, type FundBalanceStatResponse, type DonationTrendResponse,
@@ -16,20 +18,61 @@ import { money, formatMoney } from '../../src/lib/money';
 const statsStyles = (t: Theme) => ({
   fill: { flex: 1, backgroundColor: t.color.paper },
   content: { padding: t.space[5], gap: t.space[6] },
-  sectionTitle: { ...t.type.body, fontFamily: t.font.textSemi, color: t.color.ink },
-  summaryRow: { flexDirection: 'row' as const, justifyContent: 'space-between' as const, minHeight: 32 },
+  loadingBox: { flex: 1, justifyContent: 'center' as const, alignItems: 'center' as const, backgroundColor: t.color.paper, gap: t.space[3] },
+  loadingText: { ...t.type.body, fontFamily: t.font.text, color: t.color.stone },
+  card: {
+    backgroundColor: t.color.surface,
+    borderRadius: t.radius.sheet,
+    padding: t.space[4],
+    borderWidth: 1,
+    borderColor: t.color.surface,
+    gap: t.space[3],
+  },
+  sectionTitle: { ...t.type.heading, fontFamily: t.font.textSemi, color: t.color.ink },
+  summaryRow: { flexDirection: 'row' as const, justifyContent: 'space-between' as const, alignItems: 'center' as const, minHeight: 32 },
   summaryLabel: { ...t.type.body, fontFamily: t.font.text, color: t.color.stone },
   summaryValue: { ...t.type.ledger, fontFamily: t.font.ledger, color: t.color.ink },
-  netPositive: { color: t.color.ink },
+  netCard: {
+    backgroundColor: t.color.paper,
+    padding: t.space[3],
+    borderRadius: t.radius.base,
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+    marginTop: t.space[1],
+  },
+  netPositive: { color: t.color.verdigris },
   netNegative: { color: t.color.brick },
   row: {
     flexDirection: 'row' as const, justifyContent: 'space-between' as const,
-    minHeight: 40, alignItems: 'center' as const,
-    borderBottomWidth: 1, borderBottomColor: t.color.surface, paddingVertical: t.space[2],
+    minHeight: 44, alignItems: 'center' as const,
+    borderBottomWidth: 1, borderBottomColor: t.color.paper, paddingVertical: t.space[2],
   },
-  name: { ...t.type.body, fontFamily: t.font.text, color: t.color.ink },
+  name: { ...t.type.body, fontFamily: t.font.textSemi, color: t.color.ink },
   amount: { ...t.type.ledger, fontFamily: t.font.ledger, color: t.color.ink },
-  trendBar: { height: 8, borderRadius: t.radius.base, backgroundColor: t.color.ochre, marginTop: t.space[1] },
+  trendCard: {
+    backgroundColor: t.color.surface,
+    borderRadius: t.radius.base,
+    padding: t.space[3],
+    gap: t.space[2],
+    marginBottom: t.space[2],
+  },
+  trendHeader: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'center' as const,
+  },
+  trendTrack: {
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: t.color.paper,
+    overflow: 'hidden' as const,
+  },
+  trendBar: {
+    height: '100%' as const,
+    borderRadius: 5,
+    backgroundColor: t.color.verdigris,
+  },
 });
 
 function currentMonthRange(): { from: string; to: string } {
@@ -43,6 +86,7 @@ function currentMonthRange(): { from: string; to: string } {
 export default function StatisticsScreen() {
   const { t } = useTranslation();
   const s = useStyles(statsStyles);
+  const theme = useTheme();
   const mosqueId = useMosque((state) => state.currentMosqueId);
   const [summary, setSummary] = useState<IncomeExpenditureResponse | null>(null);
   const [balances, setBalances] = useState<FundBalanceStatResponse[]>([]);
@@ -72,53 +116,75 @@ export default function StatisticsScreen() {
   if (summary === null) {
     return loadError
       ? <EmptyState message={t('common.errors.loadFailed')} actionLabel={t('common.retry')} onAction={load} />
-      : <View style={s.fill} />;
+      : (
+        <View style={s.loadingBox}>
+          <ActivityIndicator size="large" color={theme.color.verdigris} />
+          <Text style={s.loadingText}>{t('common.loading', { defaultValue: 'Loading analytics...' })}</Text>
+        </View>
+      );
   }
 
   const maxTrend = Math.max(1, ...trends.map((point) => Math.abs(point.totalMinor)));
 
   return (
-    <ScrollView style={s.fill} contentContainerStyle={s.content}>
-      <View>
+    <View style={s.fill}>
+      <ScrollView style={s.fill} contentContainerStyle={s.content}>
+      <View style={s.card}>
         <Text style={s.sectionTitle}>{t('statistics.thisMonth')}</Text>
         <View style={s.summaryRow}>
           <Text style={s.summaryLabel}>{t('statistics.income')}</Text>
-          <Text style={s.summaryValue}>{formatMoney(money(summary.incomeMinor, 'BDT'), 'en-IN')}</Text>
+          <Text style={s.summaryValue}>{formatMoney(money(summary.incomeMinor, 'BDT'))}</Text>
         </View>
         <View style={s.summaryRow}>
           <Text style={s.summaryLabel}>{t('statistics.expenditure')}</Text>
-          <Text style={s.summaryValue}>{formatMoney(money(summary.expenditureMinor, 'BDT'), 'en-IN')}</Text>
+          <Text style={s.summaryValue}>{formatMoney(money(summary.expenditureMinor, 'BDT'))}</Text>
         </View>
-        <View style={s.summaryRow}>
+        <View style={s.netCard}>
           <Text style={s.summaryLabel}>{t('statistics.net')}</Text>
           <Text style={[s.summaryValue, summary.netMinor >= 0 ? s.netPositive : s.netNegative]}>
-            {formatMoney(money(summary.netMinor, 'BDT'), 'en-IN')}
+            {summary.netMinor > 0 ? '+' : ''}{formatMoney(money(summary.netMinor, 'BDT'))}
           </Text>
         </View>
       </View>
 
-      <View>
+      <View style={s.card}>
         <Text style={s.sectionTitle}>{t('statistics.fundBalances')}</Text>
-        {balances.map((fund) => (
-          <View key={fund.fundId} style={s.row}>
-            <Text style={s.name}>{fund.fundName}</Text>
-            <Text style={s.amount}>{formatMoney(money(fund.balanceMinor, 'BDT'), 'en-IN')}</Text>
-          </View>
-        ))}
+        {balances.length === 0 ? (
+          <Text style={s.summaryLabel}>{t('common.noData', { defaultValue: 'No fund balances recorded' })}</Text>
+        ) : (
+          balances.map((fund) => (
+            <View key={fund.fundId} style={s.row}>
+              <Text style={s.name}>{fund.fundName}</Text>
+              <Text style={s.amount}>{formatMoney(money(fund.balanceMinor, 'BDT'))}</Text>
+            </View>
+          ))
+        )}
       </View>
 
-      <View>
+      <View style={s.card}>
         <Text style={s.sectionTitle}>{t('statistics.donationTrends')}</Text>
-        {trends.map((point) => (
-          <View key={point.period} style={s.row}>
-            <View style={{ flex: 1 }}>
-              <Text style={s.name}>{point.period}</Text>
-              <View style={[s.trendBar, { width: `${(Math.abs(point.totalMinor) / maxTrend) * 100}%` }]} />
-            </View>
-            <Text style={s.amount}>{formatMoney(money(point.totalMinor, 'BDT'), 'en-IN')}</Text>
-          </View>
-        ))}
+        {trends.length === 0 ? (
+          <Text style={s.summaryLabel}>{t('common.noData', { defaultValue: 'No trend data recorded' })}</Text>
+        ) : (
+          trends.map((point) => {
+            const pct = Math.min(100, Math.round((Math.abs(point.totalMinor) / maxTrend) * 100));
+            return (
+              <View key={point.period} style={s.trendCard}>
+                <View style={s.trendHeader}>
+                  <Text style={s.name}>{point.period}</Text>
+                  <Text style={s.amount}>{formatMoney(money(point.totalMinor, 'BDT'))}</Text>
+                </View>
+                <View style={s.trendTrack}>
+                  <View style={[s.trendBar, { width: `${pct}%` }]} />
+                </View>
+              </View>
+            );
+          })
+        )}
       </View>
-    </ScrollView>
+      </ScrollView>
+      <BottomNav />
+    </View>
   );
 }
+

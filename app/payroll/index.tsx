@@ -148,7 +148,7 @@ export default function PayrollRunScreen() {
               <View style={s.row}>
                 <Text style={s.name}>{staffName(item.staffId)}</Text>
                 <Text style={s.amount}>
-                  {formatMoney(money(item.amountMinor, item.currency as Currency), 'en-IN')}
+                  {formatMoney(money(item.amountMinor, item.currency as Currency))}
                 </Text>
               </View>
             )}

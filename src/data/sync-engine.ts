@@ -7,29 +7,25 @@ import { localEvent, serializeHlc, type Hlc } from '../lib/hlc';
 import { syncPush, syncPull, syncBootstrap, type SyncMutation } from '../api/sync';
 import type { ApiClient } from '../api/client';
 
-const NODE_ID_KEY = 'sync_node_id';
-const HLC_STATE_KEY = 'sync_hlc_state';
+import { getDeviceId } from '../lib/device';
 
-async function getNodeId(): Promise<string> {
-  const existing = await SecureStore.getItemAsync(NODE_ID_KEY);
-  if (existing !== null) return existing;
-  const id = Crypto.randomUUID();
-  await SecureStore.setItemAsync(NODE_ID_KEY, id);
-  return id;
-}
+const HLC_STATE_KEY = 'sync_hlc_state';
+let inMemoryHlc: Hlc | null = null;
 
 /**
  * Persisted so the clock survives an app restart — an HLC that resets to (0,0) on
  * every launch could produce a value lower than one already written, breaking
- * monotonicity (offline-sync-protocol.md §3).
+ * monotonicity (offline-sync-protocol.md §3). In-memory caching avoids heavy Keystore IPC.
  */
 async function tickClock(): Promise<Hlc> {
-  const node = await getNodeId();
-  const stored = await SecureStore.getItemAsync(HLC_STATE_KEY);
-  const current: Hlc = stored !== null ? (JSON.parse(stored) as Hlc) : { wall: 0, counter: 0, node };
-  const next = localEvent(current, Date.now());
-  await SecureStore.setItemAsync(HLC_STATE_KEY, JSON.stringify(next));
-  return next;
+  const node = await getDeviceId();
+  if (inMemoryHlc === null) {
+    const stored = await SecureStore.getItemAsync(HLC_STATE_KEY);
+    inMemoryHlc = stored !== null ? (JSON.parse(stored) as Hlc) : { wall: 0, counter: 0, node };
+  }
+  inMemoryHlc = localEvent(inMemoryHlc, Date.now());
+  void SecureStore.setItemAsync(HLC_STATE_KEY, JSON.stringify(inMemoryHlc)).catch(() => {});
+  return inMemoryHlc;
 }
 
 export type RecordDonationInput = {
@@ -163,7 +159,7 @@ async function pushOutbox(api: ApiClient, mosqueId: string): Promise<void> {
     changedFields: [],
   }));
 
-  const deviceId = await getNodeId();
+  const deviceId = await getDeviceId();
   const response = await syncPush(api, mosqueId, deviceId, mutations, Crypto.randomUUID());
 
   for (const result of response.results) {

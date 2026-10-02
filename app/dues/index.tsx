@@ -116,7 +116,7 @@ export default function DuesList() {
                 <Text style={s.status}>{t(`dues.statuses.${item.status}`)}</Text>
               </View>
               <Text style={s.amount}>
-                {formatMoney(money(item.amountMinor - item.paidMinor, item.currency as Currency), 'en-IN')}
+                {formatMoney(money(item.amountMinor - item.paidMinor, item.currency as Currency))}
               </Text>
             </Pressable>
           )}

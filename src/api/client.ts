@@ -26,6 +26,7 @@ export class ApiClient {
     private readonly baseUrl: string,
     private readonly getToken: TokenProvider,
     private readonly onAuthError?: () => void,
+    private readonly onRefreshToken?: () => Promise<string | null>,
   ) {}
 
   private async request<T>(
@@ -51,6 +52,24 @@ export class ApiClient {
     }
 
     if (!response.ok) {
+      // Attempt transparent token refresh on 401 for non-auth routes
+      if (response.status === 401 && !path.startsWith('/auth/') && this.onRefreshToken) {
+        try {
+          const newToken = await this.onRefreshToken();
+          if (newToken !== null) {
+            headers['Authorization'] = `Bearer ${newToken}`;
+            const retryResponse = await fetch(`${this.baseUrl}/api/v1${path}`, { ...init, headers });
+            if (retryResponse.ok) {
+              return retryResponse.json() as Promise<T>;
+            }
+            // If retry still failed with 401/403, proceed to standard error handling
+            response = retryResponse;
+          }
+        } catch {
+          // If refresh threw, proceed to sign out / standard error
+        }
+      }
+
       const payload = await response.json().catch(() => null) as
         { error?: { code?: string; message?: string } } | null;
       const status = response.status;

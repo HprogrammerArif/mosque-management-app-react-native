@@ -23,7 +23,7 @@ export function summarizeOutboxRow(row: SummarizableOutboxRow): string {
       const amountMinor = payload['amountMinor'];
       const currency = payload['currency'];
       if (typeof amountMinor === 'number' && typeof currency === 'string') {
-        return formatMoney(money(amountMinor, currency as Currency), 'en-IN');
+        return formatMoney(money(amountMinor, currency as Currency));
       }
     }
   } catch {

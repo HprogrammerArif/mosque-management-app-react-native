@@ -25,6 +25,7 @@ export class ApiClient {
   constructor(
     private readonly baseUrl: string,
     private readonly getToken: TokenProvider,
+    private readonly onAuthError?: () => void,
   ) {}
 
   private async request<T>(
@@ -52,11 +53,16 @@ export class ApiClient {
     if (!response.ok) {
       const payload = await response.json().catch(() => null) as
         { error?: { code?: string; message?: string } } | null;
-      throw new ApiError(
-        payload?.error?.code ?? 'INTERNAL_ERROR',
-        response.status,
-        payload?.error?.message ?? 'Request failed',
-      );
+      const status = response.status;
+      const code = payload?.error?.code ?? 'INTERNAL_ERROR';
+      const message = payload?.error?.message ?? 'Request failed';
+
+      // Auto-trigger onAuthError callback for 401 Unauthorized or 403 No active membership
+      if (status === 401 || (status === 403 && (code === 'TENANT_FORBIDDEN' || message.includes('membership')))) {
+        this.onAuthError?.();
+      }
+
+      throw new ApiError(code, status, message);
     }
 
     return response.json() as Promise<T>;

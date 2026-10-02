@@ -35,7 +35,9 @@ export function useSyncTriggers(): void {
       const mosqueId = useMosque.getState().currentMosqueId;
       if (mosqueId === null || inFlight.current) return;
       inFlight.current = true;
-      void runSync(api, mosqueId).finally(() => { inFlight.current = false; });
+      void runSync(api, mosqueId)
+        .catch((err) => console.warn('[useSyncTriggers] sync failed:', err))
+        .finally(() => { inFlight.current = false; });
     };
 
     const appStateSubscription = AppState.addEventListener('change', (state: AppStateStatus) => {

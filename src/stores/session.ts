@@ -104,4 +104,9 @@ async function currentAccessToken(): Promise<string | null> {
 export const api = new ApiClient(
   process.env['EXPO_PUBLIC_API_URL'] ?? 'http://10.0.2.2:3000',
   currentAccessToken,
+  () => {
+    // When the server rejects credentials or active mosque membership (e.g. after a re-seed),
+    // automatically clear the invalid session and transition to sign-in screen
+    void useSession.getState().signOut();
+  },
 );

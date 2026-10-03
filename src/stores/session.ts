@@ -102,6 +102,8 @@ async function currentAccessToken(): Promise<string | null> {
   return raw === null ? null : (JSON.parse(raw) as Tokens).accessToken;
 }
 
+const LIVE_API_URL = 'https://backend-mosque-management-api.onrender.com';
+
 let ongoingRefresh: Promise<string | null> | null = null;
 
 async function attemptTokenRefresh(): Promise<string | null> {
@@ -115,7 +117,7 @@ async function attemptTokenRefresh(): Promise<string | null> {
       if (!tokens.refreshToken) return null;
 
       const deviceId = await getDeviceId();
-      const baseUrl = process.env['EXPO_PUBLIC_API_URL'] ?? 'http://10.0.2.2:3000';
+      const baseUrl = LIVE_API_URL;
 
       const response = await fetch(`${baseUrl}/api/v1/auth/refresh`, {
         method: 'POST',
@@ -143,7 +145,7 @@ async function attemptTokenRefresh(): Promise<string | null> {
 }
 
 export const api = new ApiClient(
-  process.env['EXPO_PUBLIC_API_URL'] ?? 'http://10.0.2.2:3000',
+  LIVE_API_URL,
   currentAccessToken,
   () => {
     // When the server rejects credentials or active mosque membership (e.g. after a re-seed),

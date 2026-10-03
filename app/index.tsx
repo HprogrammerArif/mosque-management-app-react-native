@@ -205,7 +205,11 @@ export default function Index() {
   useEffect(() => { void hydrate(); }, [hydrate]);
 
   useEffect(() => {
-    if (status !== 'authenticated') return;
+    if (status !== 'authenticated') {
+      setResolving(false);
+      return;
+    }
+    setResolving(true);
     let cancelled = false;
 
     (async () => {
@@ -240,6 +244,8 @@ export default function Index() {
     return () => { cancelled = true; };
   }, [status, memberships, setCurrentMosqueId, signOut]);
 
+  if (status === 'unauthenticated') return <Redirect href="/(auth)/sign-in" />;
+
   if (status === 'loading' || resolving) {
     return (
       <View style={s.centerBox}>
@@ -248,8 +254,6 @@ export default function Index() {
       </View>
     );
   }
-
-  if (status === 'unauthenticated') return <Redirect href="/(auth)/sign-in" />;
 
   if (!mosque) {
     return (

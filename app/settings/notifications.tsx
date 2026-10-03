@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { View, Text, ScrollView, Switch } from 'react-native';
+import { View, Text, Switch } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import * as Crypto from 'expo-crypto';
@@ -8,6 +8,7 @@ import type { Theme } from '../../src/theme/tokens';
 import { api } from '../../src/stores/session';
 import { Input } from '../../src/components/ui/Input';
 import { Button } from '../../src/components/ui/Button';
+import { KeyboardAwareScrollView } from '../../src/components/ui/KeyboardAwareScrollView';
 import {
   getNotificationPreferences, updateNotificationPreferences, type NotificationPreferencesResponse,
 } from '../../src/api/money';
@@ -57,7 +58,12 @@ export default function NotificationSettings() {
   if (prefs === null) return <View style={s.fill} />;
 
   return (
-    <ScrollView style={s.fill} contentContainerStyle={s.content}>
+    <KeyboardAwareScrollView
+      enableSafeArea
+      style={s.fill}
+      contentContainerStyle={s.content}
+      extraScrollHeight={140}
+    >
       {CATEGORIES.map((category) => (
         <View key={category} style={s.row}>
           <Text style={s.label}>{t(`settings.notifications.${category}`)}</Text>
@@ -83,6 +89,6 @@ export default function NotificationSettings() {
       />
 
       <Button label={t('common.save')} onPress={onSave} loading={saving} />
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 }

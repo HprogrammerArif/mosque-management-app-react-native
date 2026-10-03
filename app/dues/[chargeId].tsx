@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text } from 'react-native';
 import { useFocusEffect, useLocalSearchParams, router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import * as Crypto from 'expo-crypto';
@@ -9,6 +9,7 @@ import { api } from '../../src/stores/session';
 import { useMosque } from '../../src/stores/mosque';
 import { Button } from '../../src/components/ui/Button';
 import { Input } from '../../src/components/ui/Input';
+import { KeyboardAwareScrollView } from '../../src/components/ui/KeyboardAwareScrollView';
 import { EmptyState } from '../../src/components/ui/EmptyState';
 import { ApiError } from '../../src/api/client';
 import {
@@ -99,7 +100,12 @@ export default function DuesChargeDetail() {
   const settled = SETTLED_STATUSES.has(charge.status);
 
   return (
-    <ScrollView style={s.fill} contentContainerStyle={s.content}>
+    <KeyboardAwareScrollView
+      enableSafeArea
+      style={s.fill}
+      contentContainerStyle={s.content}
+      extraScrollHeight={140}
+    >
       <View style={s.summary}>
         <Text style={s.period}>{charge.period}</Text>
         <Text style={s.status}>{t(`dues.statuses.${charge.status}`)}</Text>
@@ -149,6 +155,6 @@ export default function DuesChargeDetail() {
           />
         </View>
       )}
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 }

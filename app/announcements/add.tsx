@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, ScrollView, Switch } from 'react-native';
+import { View, Text, Switch } from 'react-native';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import * as Crypto from 'expo-crypto';
@@ -9,6 +9,7 @@ import { api } from '../../src/stores/session';
 import { useMosque } from '../../src/stores/mosque';
 import { Button } from '../../src/components/ui/Button';
 import { Input } from '../../src/components/ui/Input';
+import { KeyboardAwareScrollView } from '../../src/components/ui/KeyboardAwareScrollView';
 import { createAnnouncement } from '../../src/api/money';
 import { ApiError } from '../../src/api/client';
 
@@ -53,7 +54,12 @@ export default function AddAnnouncement() {
   }
 
   return (
-    <ScrollView style={s.fill} contentContainerStyle={s.content}>
+    <KeyboardAwareScrollView
+      enableSafeArea
+      style={s.fill}
+      contentContainerStyle={s.content}
+      extraScrollHeight={140}
+    >
       <Input label={t('announcements.announcementTitle')} value={title} onChangeText={setTitle} />
       <Input label={t('announcements.body')} value={body} onChangeText={setBody} />
 
@@ -74,6 +80,6 @@ export default function AddAnnouncement() {
         loading={saving}
         disabled={title.trim() === '' || body.trim() === ''}
       />
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 }

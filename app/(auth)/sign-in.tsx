@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { View, Text, KeyboardAvoidingView, Platform, Pressable } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, Text, Platform, Pressable } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { router } from 'expo-router';
 import { Button } from '../../src/components/ui/Button';
 import { Input } from '../../src/components/ui/Input';
+import { KeyboardAwareScrollView } from '../../src/components/ui/KeyboardAwareScrollView';
 import { useStyles } from '../../src/theme/use-styles';
 import type { Theme } from '../../src/theme/tokens';
 import { api, useSession, type AuthResponse } from '../../src/stores/session';
@@ -13,7 +13,12 @@ import { getDeviceId } from '../../src/lib/device';
 
 const screenStyles = (t: Theme) => ({
   safe: { flex: 1, backgroundColor: t.color.paper },
-  body: { flex: 1, justifyContent: 'center' as const, paddingHorizontal: t.space[5] },
+  content: {
+    flexGrow: 1,
+    justifyContent: 'center' as const,
+    paddingHorizontal: t.space[5],
+    paddingVertical: t.space[6],
+  },
   eyebrow: {
     ...t.type.label, fontFamily: t.font.sign,
     textTransform: 'uppercase' as const,
@@ -67,45 +72,45 @@ export default function SignIn() {
   }
 
   return (
-    <SafeAreaView style={s.safe}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={s.body}
+    <KeyboardAwareScrollView
+      enableSafeArea
+      style={s.safe}
+      contentContainerStyle={s.content}
+      extraScrollHeight={100}
+    >
+      <Text style={s.eyebrow}>Masjid OS</Text>
+      <Text style={s.title}>{t('auth.signIn')}</Text>
+
+      <Input
+        label={t('auth.identifier')}
+        hint={t('auth.identifierHint')}
+        value={identifier}
+        onChangeText={setIdentifier}
+        keyboardType="email-address"
+        autoFocus
+      />
+      <Input
+        label={t('auth.password')}
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+      />
+
+      {formError !== null && (
+        <View style={s.errorBox}>
+          <Text style={s.errorText}>{formError}</Text>
+        </View>
+      )}
+
+      <Button label={t('auth.signIn')} onPress={handleSubmit} loading={loading} />
+
+      <Pressable
+        style={s.switchLink}
+        onPress={() => router.replace('/(auth)/sign-up')}
+        accessibilityRole="button"
       >
-        <Text style={s.eyebrow}>Masjid OS</Text>
-        <Text style={s.title}>{t('auth.signIn')}</Text>
-
-        <Input
-          label={t('auth.identifier')}
-          hint={t('auth.identifierHint')}
-          value={identifier}
-          onChangeText={setIdentifier}
-          keyboardType="email-address"
-          autoFocus
-        />
-        <Input
-          label={t('auth.password')}
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-
-        {formError !== null && (
-          <View style={s.errorBox}>
-            <Text style={s.errorText}>{formError}</Text>
-          </View>
-        )}
-
-        <Button label={t('auth.signIn')} onPress={handleSubmit} loading={loading} />
-
-        <Pressable
-          style={s.switchLink}
-          onPress={() => router.replace('/(auth)/sign-up')}
-          accessibilityRole="button"
-        >
-          <Text style={s.switchText}>{t('auth.noAccount')}</Text>
-        </Pressable>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+        <Text style={s.switchText}>{t('auth.noAccount')}</Text>
+      </Pressable>
+    </KeyboardAwareScrollView>
   );
 }

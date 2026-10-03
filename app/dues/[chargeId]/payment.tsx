@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import * as Crypto from 'expo-crypto';
@@ -10,6 +10,7 @@ import { useMosque } from '../../../src/stores/mosque';
 import { Button } from '../../../src/components/ui/Button';
 import { Input } from '../../../src/components/ui/Input';
 import { SelectField } from '../../../src/components/ui/SelectField';
+import { KeyboardAwareScrollView } from '../../../src/components/ui/KeyboardAwareScrollView';
 import { recordDuesPayment } from '../../../src/api/money';
 import { getCachedFunds } from '../../../src/data/sync-mosque';
 import { ApiError } from '../../../src/api/client';
@@ -86,7 +87,12 @@ export default function RecordDuesPayment() {
   }
 
   return (
-    <ScrollView style={s.fill} contentContainerStyle={s.content}>
+    <KeyboardAwareScrollView
+      enableSafeArea
+      style={s.fill}
+      contentContainerStyle={s.content}
+      extraScrollHeight={140}
+    >
       <SelectField
         label={t('expenses.fund')}
         value={fundId}
@@ -114,6 +120,6 @@ export default function RecordDuesPayment() {
         loading={saving}
         disabled={fundId === null || amount === ''}
       />
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 }

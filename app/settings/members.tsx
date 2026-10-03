@@ -86,7 +86,10 @@ export default function MembersScreen() {
   return (
     <FlatList
       style={s.fill}
-      contentContainerStyle={s.content}
+      contentContainerStyle={[s.content, { paddingBottom: 140 }]}
+      keyboardShouldPersistTaps="handled"
+      automaticallyAdjustKeyboardInsets
+      showsVerticalScrollIndicator={false}
       data={members}
       keyExtractor={(item) => item.id}
       ListHeaderComponent={

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, ScrollView, Pressable, Share } from 'react-native';
+import { View, Text, Pressable, Share } from 'react-native';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useStyles } from '../../src/theme/use-styles';
@@ -9,6 +9,7 @@ import { useMosque } from '../../src/stores/mosque';
 import { Button } from '../../src/components/ui/Button';
 import { Input } from '../../src/components/ui/Input';
 import { SelectField } from '../../src/components/ui/SelectField';
+import { KeyboardAwareScrollView } from '../../src/components/ui/KeyboardAwareScrollView';
 import { getCachedFunds, getCachedMosque } from '../../src/data/sync-mosque';
 import { recordDonationOffline, runSync } from '../../src/data/sync-engine';
 import { newEntityId } from '../../src/lib/id';
@@ -213,7 +214,7 @@ JazakAllahu Khayran for your generous contribution.`;
 
   if (lastReceipt !== null) {
     return (
-      <ScrollView style={s.fill} contentContainerStyle={s.content}>
+      <KeyboardAwareScrollView enableSafeArea style={s.fill} contentContainerStyle={s.content}>
         <View style={s.receiptCard}>
           <Text style={s.receiptBadge}>✓ {t('donations.recorded', { defaultValue: 'Donation Recorded' })}</Text>
           <Text style={s.receiptAmount}>{formatMoney(money(lastReceipt.amount, 'BDT'))}</Text>
@@ -238,12 +239,17 @@ JazakAllahu Khayran for your generous contribution.`;
             />
           </View>
         </View>
-      </ScrollView>
+      </KeyboardAwareScrollView>
     );
   }
 
   return (
-    <ScrollView style={s.fill} contentContainerStyle={s.content}>
+    <KeyboardAwareScrollView
+      enableSafeArea
+      style={s.fill}
+      contentContainerStyle={s.content}
+      extraScrollHeight={140}
+    >
       <SelectField
         label={t('donations.fund')}
         value={fundId}
@@ -307,7 +313,7 @@ JazakAllahu Khayran for your generous contribution.`;
         loading={saving}
         disabled={fundId === null || amount === ''}
       />
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 }
 

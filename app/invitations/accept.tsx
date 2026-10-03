@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text } from 'react-native';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import * as Crypto from 'expo-crypto';
@@ -8,6 +8,7 @@ import type { Theme } from '../../src/theme/tokens';
 import { api, useSession } from '../../src/stores/session';
 import { Button } from '../../src/components/ui/Button';
 import { Input } from '../../src/components/ui/Input';
+import { KeyboardAwareScrollView } from '../../src/components/ui/KeyboardAwareScrollView';
 import { acceptInvitation } from '../../src/api/mosques';
 import { ApiError } from '../../src/api/client';
 
@@ -58,7 +59,12 @@ export default function AcceptInvitation() {
   }
 
   return (
-    <ScrollView style={s.fill} contentContainerStyle={s.content}>
+    <KeyboardAwareScrollView
+      enableSafeArea
+      style={s.fill}
+      contentContainerStyle={s.content}
+      extraScrollHeight={140}
+    >
       <Text style={s.title}>{t('invitations.title')}</Text>
 
       <Input
@@ -76,6 +82,6 @@ export default function AcceptInvitation() {
       )}
 
       <Button label={t('invitations.accept')} onPress={handleAccept} loading={saving} disabled={token.trim() === ''} />
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 }

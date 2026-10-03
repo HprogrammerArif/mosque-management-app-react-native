@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text } from 'react-native';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import * as Crypto from 'expo-crypto';
@@ -9,6 +9,7 @@ import { api } from '../../src/stores/session';
 import { useMosque } from '../../src/stores/mosque';
 import { Button } from '../../src/components/ui/Button';
 import { Input } from '../../src/components/ui/Input';
+import { KeyboardAwareScrollView } from '../../src/components/ui/KeyboardAwareScrollView';
 import { createCommitteeMember } from '../../src/api/money';
 import { ApiError } from '../../src/api/client';
 
@@ -54,7 +55,12 @@ export default function AddCommitteeMember() {
   }
 
   return (
-    <ScrollView style={s.fill} contentContainerStyle={s.content}>
+    <KeyboardAwareScrollView
+      enableSafeArea
+      style={s.fill}
+      contentContainerStyle={s.content}
+      extraScrollHeight={140}
+    >
       <Input label={t('committee.memberName')} value={name} onChangeText={setName} />
       <Input label={t('committee.position')} value={position} onChangeText={setPosition} />
       <Input label={t('households.phone')} value={phone} onChangeText={setPhone} keyboardType="phone-pad" />
@@ -66,6 +72,6 @@ export default function AddCommitteeMember() {
       )}
 
       <Button label={t('common.save')} onPress={handleSave} loading={saving} disabled={name.trim() === ''} />
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 }

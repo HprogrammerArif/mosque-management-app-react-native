@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, ScrollView, Pressable, Share } from 'react-native';
+import { View, Text, Pressable, Share } from 'react-native';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import * as Crypto from 'expo-crypto';
@@ -10,6 +10,7 @@ import { useMosque } from '../../src/stores/mosque';
 import { Button } from '../../src/components/ui/Button';
 import { Input } from '../../src/components/ui/Input';
 import { SelectField } from '../../src/components/ui/SelectField';
+import { KeyboardAwareScrollView } from '../../src/components/ui/KeyboardAwareScrollView';
 import { recordExpense } from '../../src/api/money';
 import { getCachedFunds, getCachedExpenseCategories, getCachedMosque } from '../../src/data/sync-mosque';
 import { ApiError } from '../../src/api/client';
@@ -228,7 +229,7 @@ Verified and accounted for by Mosque Administration.`;
 
   if (lastVoucher !== null) {
     return (
-      <ScrollView style={s.fill} contentContainerStyle={s.content}>
+      <KeyboardAwareScrollView enableSafeArea style={s.fill} contentContainerStyle={s.content}>
         <View style={s.voucherCard}>
           <Text style={s.voucherBadge}>✓ {t('expenses.recorded', { defaultValue: 'Expense Voucher Recorded' })}</Text>
           <Text style={s.voucherAmount}>{formatMoney(money(lastVoucher.amount, 'BDT'))}</Text>
@@ -253,12 +254,17 @@ Verified and accounted for by Mosque Administration.`;
             />
           </View>
         </View>
-      </ScrollView>
+      </KeyboardAwareScrollView>
     );
   }
 
   return (
-    <ScrollView style={s.fill} contentContainerStyle={s.content}>
+    <KeyboardAwareScrollView
+      enableSafeArea
+      style={s.fill}
+      contentContainerStyle={s.content}
+      extraScrollHeight={140}
+    >
       <SelectField
         label={t('expenses.fund')}
         value={fundId}
@@ -328,6 +334,6 @@ Verified and accounted for by Mosque Administration.`;
         loading={saving}
         disabled={fundId === null || categoryId === null || amount === ''}
       />
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 }

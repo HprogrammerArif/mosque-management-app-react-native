@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text } from 'react-native';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useStyles } from '../../src/theme/use-styles';
@@ -8,6 +8,7 @@ import { api } from '../../src/stores/session';
 import { useMosque } from '../../src/stores/mosque';
 import { Button } from '../../src/components/ui/Button';
 import { Input } from '../../src/components/ui/Input';
+import { KeyboardAwareScrollView } from '../../src/components/ui/KeyboardAwareScrollView';
 import { recordHouseholdOffline, runSync } from '../../src/data/sync-engine';
 import { newEntityId } from '../../src/lib/id';
 
@@ -60,7 +61,12 @@ export default function RegisterHousehold() {
   }
 
   return (
-    <ScrollView style={s.fill} contentContainerStyle={s.content}>
+    <KeyboardAwareScrollView
+      enableSafeArea
+      style={s.fill}
+      contentContainerStyle={s.content}
+      extraScrollHeight={140}
+    >
       <Input label={t('households.name')} value={name} onChangeText={setName} />
       <Input label={t('households.area')} value={area} onChangeText={setArea} />
       <Input label={t('households.phone')} value={phone} onChangeText={setPhone} keyboardType="phone-pad" />
@@ -78,6 +84,6 @@ export default function RegisterHousehold() {
       )}
 
       <Button label={t('common.save')} onPress={handleSave} loading={saving} disabled={name === ''} />
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 }

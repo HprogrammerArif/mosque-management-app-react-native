@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { View, Text, ScrollView, KeyboardAvoidingView, Platform, Pressable } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, Text, Pressable } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { router } from 'expo-router';
 import { Button } from '../../src/components/ui/Button';
 import { Input } from '../../src/components/ui/Input';
+import { KeyboardAwareScrollView } from '../../src/components/ui/KeyboardAwareScrollView';
 import { useStyles } from '../../src/theme/use-styles';
 import type { Theme } from '../../src/theme/tokens';
 import { api, useSession } from '../../src/stores/session';
@@ -88,67 +88,65 @@ export default function SignUp() {
   const canSubmit = displayName.trim() !== '' && identifierValid && password.length >= 8 && passwordsMatch;
 
   return (
-    <SafeAreaView style={s.safe}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={s.body}
+    <KeyboardAwareScrollView
+      enableSafeArea
+      style={s.safe}
+      contentContainerStyle={s.content}
+      extraScrollHeight={100}
+    >
+      <Text style={s.eyebrow}>Masjid OS</Text>
+      <Text style={s.title}>{t('auth.signUp')}</Text>
+
+      <Input
+        label={t('auth.displayName')}
+        placeholder="e.g. Abdullah Ahmed"
+        value={displayName}
+        onChangeText={setDisplayName}
+        autoFocus
+      />
+      <Input
+        label={t('auth.identifier')}
+        placeholder="email@example.com or +8801712345678"
+        hint={!isEmail && trimmedIdentifier.length > 0 && !trimmedIdentifier.startsWith('+')
+          ? 'Include country code (e.g. +88017...)'
+          : t('auth.identifierHint')}
+        error={trimmedIdentifier.length > 0 && !identifierValid ? 'Please enter a valid email or phone with country code (+)' : undefined}
+        value={identifier}
+        onChangeText={setIdentifier}
+        keyboardType="email-address"
+      />
+      <Input
+        label={t('auth.password')}
+        placeholder="At least 8 characters"
+        hint={password.length > 0 && password.length < 8 ? 'Password must be at least 8 characters' : undefined}
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+      />
+      <Input
+        label={t('auth.confirmPassword')}
+        placeholder="Re-type password"
+        error={confirmPassword.length > 0 && !passwordsMatch ? t('auth.passwordMismatch') : undefined}
+        value={confirmPassword}
+        onChangeText={setConfirmPassword}
+        secureTextEntry
+      />
+
+      {formError !== null && (
+        <View style={s.errorBox}>
+          <Text style={s.errorText}>{formError}</Text>
+        </View>
+      )}
+
+      <Button label={t('auth.signUp')} onPress={handleSubmit} loading={loading} disabled={!canSubmit} />
+
+      <Pressable
+        style={s.switchLink}
+        onPress={() => router.replace('/(auth)/sign-in')}
+        accessibilityRole="button"
       >
-        <ScrollView contentContainerStyle={s.content} keyboardShouldPersistTaps="handled">
-          <Text style={s.eyebrow}>Masjid OS</Text>
-          <Text style={s.title}>{t('auth.signUp')}</Text>
-
-          <Input
-            label={t('auth.displayName')}
-            placeholder="e.g. Abdullah Ahmed"
-            value={displayName}
-            onChangeText={setDisplayName}
-            autoFocus
-          />
-          <Input
-            label={t('auth.identifier')}
-            placeholder="email@example.com or +8801712345678"
-            hint={!isEmail && trimmedIdentifier.length > 0 && !trimmedIdentifier.startsWith('+')
-              ? 'Include country code (e.g. +88017...)'
-              : t('auth.identifierHint')}
-            error={trimmedIdentifier.length > 0 && !identifierValid ? 'Please enter a valid email or phone with country code (+)' : undefined}
-            value={identifier}
-            onChangeText={setIdentifier}
-            keyboardType="email-address"
-          />
-          <Input
-            label={t('auth.password')}
-            placeholder="At least 8 characters"
-            hint={password.length > 0 && password.length < 8 ? 'Password must be at least 8 characters' : undefined}
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-          />
-          <Input
-            label={t('auth.confirmPassword')}
-            placeholder="Re-type password"
-            error={confirmPassword.length > 0 && !passwordsMatch ? t('auth.passwordMismatch') : undefined}
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            secureTextEntry
-          />
-
-          {formError !== null && (
-            <View style={s.errorBox}>
-              <Text style={s.errorText}>{formError}</Text>
-            </View>
-          )}
-
-          <Button label={t('auth.signUp')} onPress={handleSubmit} loading={loading} disabled={!canSubmit} />
-
-          <Pressable
-            style={s.switchLink}
-            onPress={() => router.replace('/(auth)/sign-in')}
-            accessibilityRole="button"
-          >
-            <Text style={s.switchText}>{t('auth.haveAccount')}</Text>
-          </Pressable>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+        <Text style={s.switchText}>{t('auth.haveAccount')}</Text>
+      </Pressable>
+    </KeyboardAwareScrollView>
   );
 }

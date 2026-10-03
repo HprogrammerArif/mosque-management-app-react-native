@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text } from 'react-native';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import * as Crypto from 'expo-crypto';
@@ -9,6 +9,7 @@ import { api } from '../../src/stores/session';
 import { useMosque } from '../../src/stores/mosque';
 import { Button } from '../../src/components/ui/Button';
 import { Input } from '../../src/components/ui/Input';
+import { KeyboardAwareScrollView } from '../../src/components/ui/KeyboardAwareScrollView';
 import { createEvent } from '../../src/api/money';
 import { ApiError } from '../../src/api/client';
 
@@ -66,7 +67,12 @@ export default function AddEvent() {
   }
 
   return (
-    <ScrollView style={s.fill} contentContainerStyle={s.content}>
+    <KeyboardAwareScrollView
+      enableSafeArea
+      style={s.fill}
+      contentContainerStyle={s.content}
+      extraScrollHeight={140}
+    >
       <Input label={t('events.eventTitle')} value={title} onChangeText={setTitle} />
       <Input label={t('expenses.description')} value={description} onChangeText={setDescription} />
       <Input label={t('common.date')} value={date} onChangeText={setDate} />
@@ -80,6 +86,6 @@ export default function AddEvent() {
       )}
 
       <Button label={t('common.save')} onPress={handleSave} loading={saving} disabled={title.trim() === ''} />
-    </ScrollView>
+    </KeyboardAwareScrollView>
   );
 }
